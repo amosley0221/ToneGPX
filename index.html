@@ -27,6 +27,19 @@
     --rail-w: 68px;
     --nav-h: 76px;
   }
+  :root.theme--light{
+    --bg: #f3ede0;
+    --bg-2: #ebe4d4;
+    --surface: #ddd5c1;
+    --ink: #1a1a1c;
+    --ink-dim: #6c675c;
+    --hair: rgba(26, 26, 28, 0.08);
+    --hair-strong: rgba(26, 26, 28, 0.18);
+  }
+  :root.theme--light body::before{ opacity: 0.22; mix-blend-mode: multiply; }
+  :root.theme--light body::after{
+    background: radial-gradient(120% 80% at 50% 30%, transparent 55%, rgba(26,26,28,0.18) 100%);
+  }
   *,*::before,*::after{ box-sizing: border-box; }
   html, body{ margin: 0; padding: 0; background: var(--bg); color: var(--ink); height: 100%; overflow: hidden; }
   body{
@@ -616,9 +629,12 @@
 
   /* ─── Tweaks launcher ────────────────────────────────────────────────── */
   .twk-launcher{
-    position: fixed; right: calc(var(--rail-w) + 16px); bottom: 16px; z-index: 60;
-    display: inline-flex; align-items: center; gap: 10px;
-    padding: 10px 14px;
+    position: fixed;
+    right: calc(var(--rail-w) + 16px);
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 16px);
+    z-index: 60;
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 36px; height: 36px; padding: 0;
     border: 1px solid var(--hair-strong);
     border-radius: 999px;
     background: color-mix(in oklab, var(--bg) 80%, transparent);
@@ -628,9 +644,9 @@
   }
   .twk-launcher:hover{ border-color: var(--ink); transform: translateY(-1px); }
   .twk-launcher__dot{
-    width: 8px; height: 8px; border-radius: 50%;
+    width: 9px; height: 9px; border-radius: 50%;
     background: var(--accent);
-    box-shadow: 0 0 14px var(--accent);
+    box-shadow: 0 0 12px var(--accent);
   }
 
   /* ─── Tweaks panel — dark theme override ─────────────────────────────── */
@@ -646,6 +662,7 @@
     box-shadow: 0 28px 80px rgba(0,0,0,0.6),
                 0 1px 0 rgba(255,255,255,0.04) inset !important;
     font-family: var(--font-ui) !important;
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 16px) !important;
     -webkit-backdrop-filter: blur(22px) saturate(140%) !important;
             backdrop-filter: blur(22px) saturate(140%) !important;
   }
@@ -673,14 +690,19 @@
   .twk-val{ color: var(--ink) !important;
             font-family: var(--font-mono) !important; font-size: 11px !important; }
 
-  .twk-field{ background: color-mix(in oklab, var(--ink) 5%, transparent) !important;
+  .twk-field{ background-color: color-mix(in oklab, var(--ink) 5%, transparent) !important;
               color: var(--ink) !important;
               border: 1px solid var(--hair-strong) !important;
               border-radius: 8px !important; height: 28px !important; }
   .twk-field:focus{ border-color: var(--accent) !important;
-                    background: color-mix(in oklab, var(--ink) 8%, transparent) !important; }
+                    background-color: color-mix(in oklab, var(--ink) 8%, transparent) !important; }
+  /* Re-assert the chevron — the shared panel sets it via background-image
+     but we have to be explicit about repeat/position too because higher-
+     specificity rules above can clobber the longhands. */
   select.twk-field{
     background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'><path fill='rgba(233,227,213,.6)' d='M0 0h10L5 6z'/></svg>") !important;
+    background-repeat: no-repeat !important;
+    background-position: right 10px center !important;
   }
   select.twk-field option{ background: var(--bg-2); color: var(--ink); }
 
@@ -714,7 +736,7 @@
                  box-shadow: 0 1px 3px rgba(0,0,0,0.5) !important; }
   .twk-toggle[data-on="1"] i{ background: var(--bg) !important; }
 
-  .twk-num{ background: color-mix(in oklab, var(--ink) 5%, transparent) !important;
+  .twk-num{ background-color: color-mix(in oklab, var(--ink) 5%, transparent) !important;
             border: 1px solid var(--hair-strong) !important;
             border-radius: 8px !important; height: 28px !important; }
   .twk-num-lbl{ color: var(--ink-dim) !important; font-family: var(--font-mono) !important;

@@ -1026,7 +1026,6 @@ function TweaksLauncher() {
       data-cursor="link"
     >
       <span className="twk-launcher__dot" />
-      <span className="mono">Tweaks</span>
     </button>
   );
 }
@@ -1039,7 +1038,7 @@ function PortfolioTweaks({ t, setTweak }) {
           options={["#c79a5b", "#a68b65", "#8aa6c8", "#9f7e54", "#c97a5a", "#7a8a78"]}
           onChange={(v) => setTweak("accent", v)} />
         <TweakRadio label="Background" value={t.bg}
-          options={[{label:"Ink",value:"ink"},{label:"Charcoal",value:"char"},{label:"Off-black",value:"off"}]}
+          options={[{label:"Ink",value:"ink"},{label:"Bone",value:"light"}]}
           onChange={(v) => setTweak("bg", v)} />
       </TweakSection>
       <TweakSection title="Type">
@@ -1049,12 +1048,6 @@ function PortfolioTweaks({ t, setTweak }) {
         <TweakSelect label="UI" value={t.ui}
           options={[{label:"Geist",value:"Geist"},{label:"Inter",value:"Inter"},{label:"Helvetica",value:"Helvetica"}]}
           onChange={(v) => setTweak("ui", v)} />
-      </TweakSection>
-      <TweakSection title="Interface">
-        <TweakRadio label="Grid density" value={String(t.density)}
-          options={[{label:"Loose",value:"1"},{label:"Default",value:"2"},{label:"Dense",value:"3"}]}
-          onChange={(v) => setTweak("density", Number(v))} />
-        <TweakToggle label="Custom cursor" checked={t.cursor} onChange={(v) => setTweak("cursor", v)} />
       </TweakSection>
     </TweaksPanel>
   );
@@ -1074,8 +1067,7 @@ function App() {
     root.style.setProperty("--accent", tweaks.accent);
     root.style.setProperty("--font-display", `"${tweaks.display}", "Iowan Old Style", Georgia, serif`);
     root.style.setProperty("--font-ui", `"${tweaks.ui}", system-ui, sans-serif`);
-    const bgMap = { ink: "#0a0a0c", char: "#101012", off: "#0e0d0a" };
-    root.style.setProperty("--bg", bgMap[tweaks.bg] || "#0a0a0c");
+    root.classList.toggle("theme--light", tweaks.bg === "light");
   }, [tweaks]);
 
   // Page change handler — with transition
