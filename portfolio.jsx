@@ -1816,6 +1816,8 @@ function nextOf(id) {
 // ─── Tweaks launcher ────────────────────────────────────────────────────────
 function TweaksLauncher() {
   const [visible, setVisible] = useState(true);
+  const [overFoot, setOverFoot] = useState(false);
+
   useEffect(() => {
     const onMsg = (e) => {
       const t = e?.data?.type;
@@ -1828,13 +1830,42 @@ function TweaksLauncher() {
     window.addEventListener("message", onMsg);
     return () => window.removeEventListener("message", onMsg);
   }, []);
+
+  // Hide the launcher when the page-nav footer (prev / next buttons) is in
+  // view — otherwise the dot overlaps the "Work →" / "← Home" buttons in the
+  // bottom-right corner. Re-attach on a small interval because the .stage
+  // (and the .stage__foot inside it) gets re-created on every page change.
+  useEffect(() => {
+    let observer = null;
+    let target = null;
+    const attach = () => {
+      const foot = document.querySelector(".stage__foot");
+      if (foot === target) return;
+      if (observer) observer.disconnect();
+      target = foot;
+      if (!foot) { setOverFoot(false); return; }
+      observer = new IntersectionObserver(
+        ([entry]) => setOverFoot(entry.isIntersecting),
+        { threshold: 0 }
+      );
+      observer.observe(foot);
+    };
+    attach();
+    const interval = setInterval(attach, 400);
+    return () => {
+      if (observer) observer.disconnect();
+      clearInterval(interval);
+    };
+  }, []);
+
   if (!visible) return null;
   return (
     <button
-      className="twk-launcher"
+      className={`twk-launcher ${overFoot ? "is-tucked" : ""}`}
       onClick={() => window.postMessage({ type: "__activate_edit_mode" }, "*")}
       aria-label="Open Tweaks"
       data-cursor="link"
+      aria-hidden={overFoot}
     >
       <span className="twk-launcher__dot" />
     </button>

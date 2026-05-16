@@ -893,6 +893,11 @@
     transition: border-color 200ms ease, background 200ms ease, transform 200ms ease;
   }
   .twk-launcher:hover{ border-color: var(--ink); transform: translateY(-1px); }
+  .twk-launcher.is-tucked{
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(8px);
+  }
   .twk-launcher__dot{
     width: 9px; height: 9px; border-radius: 50%;
     background: var(--accent);
