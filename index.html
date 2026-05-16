@@ -184,82 +184,6 @@
   .nav__status .dot{ width: 7px; height: 7px; border-radius: 50%; background: #5ec98c; box-shadow: 0 0 12px #5ec98c; animation: pulse 2.4s ease-in-out infinite; }
   @keyframes pulse{ 0%,100%{ opacity: 1; transform: scale(1); } 50%{ opacity: 0.5; transform: scale(0.85); } }
 
-  /* ─── Nav menu (pop-out) ─────────────────────────────────────────────── */
-  .navmenu__trigger{
-    display: inline-flex; align-items: center; gap: 10px;
-    padding: 6px 8px 6px 14px;
-    border: 1px solid var(--hair-strong);
-    border-radius: 999px;
-    transition: background 220ms ease, border-color 220ms ease;
-  }
-  .navmenu__trigger:hover{ border-color: var(--ink); }
-  .navmenu__trigger.is-open{ background: var(--ink); color: var(--bg); border-color: var(--ink); }
-  .navmenu__bars{ display: inline-flex; flex-direction: column; justify-content: space-between; width: 14px; height: 10px; }
-  .navmenu__bars span{ display: block; height: 1px; background: currentColor; transition: transform 280ms cubic-bezier(.2,.7,.2,1), opacity 220ms ease, width 280ms ease; transform-origin: center; width: 100%; }
-  .navmenu__bars span:nth-child(2){ width: 70%; align-self: flex-end; }
-  .navmenu__trigger.is-open .navmenu__bars span:nth-child(1){ transform: translateY(4.5px) rotate(45deg); width: 100%; }
-  .navmenu__trigger.is-open .navmenu__bars span:nth-child(2){ opacity: 0; }
-  .navmenu__trigger.is-open .navmenu__bars span:nth-child(3){ transform: translateY(-4.5px) rotate(-45deg); width: 100%; }
-
-  .navmenu{
-    position: absolute;
-    top: calc(100% - 8px);
-    right: var(--gutter);
-    width: min(420px, calc(100vw - 32px));
-    background: color-mix(in oklab, var(--bg-2) 96%, transparent);
-    border: 1px solid var(--hair-strong);
-    border-radius: 14px;
-    box-shadow: 0 28px 80px rgba(0,0,0,0.55);
-    backdrop-filter: blur(22px) saturate(140%); -webkit-backdrop-filter: blur(22px) saturate(140%);
-    opacity: 0;
-    transform: translateY(-8px) scale(0.985);
-    transform-origin: top right;
-    pointer-events: none;
-    transition: opacity 280ms cubic-bezier(.2,.7,.2,1), transform 320ms cubic-bezier(.2,.7,.2,1);
-    overflow: hidden;
-  }
-  .navmenu.is-open{ opacity: 1; transform: none; pointer-events: auto; }
-  .navmenu__head{
-    display: flex; justify-content: space-between; align-items: center;
-    padding: 14px 20px;
-    border-bottom: 1px solid var(--hair);
-  }
-  .navmenu__actions{ display: flex; flex-direction: column; padding: 8px; gap: 4px; }
-  .navmenu__cta{
-    display: grid;
-    grid-template-columns: 28px 1fr 24px;
-    grid-template-rows: auto auto;
-    column-gap: 14px;
-    align-items: center;
-    padding: 18px 14px;
-    border-radius: 10px;
-    text-align: left;
-    transition: background 240ms ease, padding 240ms ease;
-    position: relative;
-  }
-  .navmenu__cta:hover{ background: color-mix(in oklab, var(--ink) 5%, transparent); padding-left: 18px; }
-  .navmenu__cta > .mono.dim:first-child{ grid-row: 1 / 3; align-self: start; padding-top: 4px; }
-  .navmenu__cta-title{ font-size: 26px; line-height: 1.05; letter-spacing: -0.015em; grid-column: 2; grid-row: 1; }
-  .navmenu__cta-sub{ grid-column: 2; grid-row: 2; margin-top: 4px; font-size: 10px; }
-  .navmenu__arrow{ grid-column: 3; grid-row: 1 / 3; align-self: center; justify-self: end; font-family: var(--font-mono); color: var(--accent); font-size: 18px; transition: transform 240ms ease; }
-  .navmenu__cta:hover .navmenu__arrow{ transform: translateX(4px); }
-
-  .navmenu__links{
-    display: flex; flex-direction: column;
-    border-top: 1px solid var(--hair);
-  }
-  .navmenu__link{
-    display: grid; grid-template-columns: 60px 1fr 20px;
-    gap: 14px; align-items: center;
-    padding: 12px 22px;
-    font-size: 14px;
-    border-top: 1px solid var(--hair);
-    transition: background 220ms ease, padding 220ms ease;
-  }
-  .navmenu__link:first-child{ border-top: 0; }
-  .navmenu__link:hover{ background: color-mix(in oklab, var(--ink) 5%, transparent); padding-left: 28px; }
-  .navmenu__link .navmenu__arrow{ justify-self: end; font-size: 13px; }
-
   /* ─── Stage (single page at a time) ──────────────────────────────────── */
   .stage{
     position: fixed; top: 0; left: 0; right: var(--rail-w); bottom: 0;
@@ -588,8 +512,6 @@
     :root{ --rail-w: 48px; --nav-h: 64px; }
     .nav{ grid-template-columns: 1fr auto; }
     .nav__meta{ grid-column: 2; }
-    .nav__status{ display: none; }
-    .navmenu{ width: min(380px, calc(100vw - 24px)); }
     .work__grid--grid, .work__grid--mosaic{ grid-template-columns: 1fr; }
     .work__grid--mosaic .card, .work__grid--mosaic .card--wide{ grid-column: span 1; }
     .about__grid, .contact__grid{ grid-template-columns: 1fr; gap: 40px; }

@@ -252,7 +252,6 @@ function ScrollRail({ targetRef, page, totalPages }) {
 // ─── Nav ────────────────────────────────────────────────────────────────────
 function Nav({ page, onNav }) {
   const [time, setTime] = useState("");
-  const [menuOpen, setMenuOpen] = useState(false);
   useEffect(() => {
     const fmt = () => {
       const d = new Date();
@@ -263,22 +262,6 @@ function Nav({ page, onNav }) {
     const id = setInterval(fmt, 30_000);
     return () => clearInterval(id);
   }, []);
-  useEffect(() => {
-    if (!menuOpen) return;
-    const close = (e) => {
-      if (e.target.closest(".navmenu, .navmenu__trigger")) return;
-      setMenuOpen(false);
-    };
-    const onKey = (e) => { if (e.key === "Escape") setMenuOpen(false); };
-    document.addEventListener("mousedown", close);
-    document.addEventListener("keydown", onKey);
-    return () => {
-      document.removeEventListener("mousedown", close);
-      document.removeEventListener("keydown", onKey);
-    };
-  }, [menuOpen]);
-
-  const go = (id) => { setMenuOpen(false); onNav(id); };
 
   return (
     <nav className="nav">
@@ -305,56 +288,6 @@ function Nav({ page, onNav }) {
           <span className="dot" />
           <span className="mono">Available Q3</span>
         </span>
-        <button
-          className={`navmenu__trigger ${menuOpen ? "is-open" : ""}`}
-          onClick={() => setMenuOpen((v) => !v)}
-          aria-expanded={menuOpen}
-          aria-label="Open menu"
-          data-cursor="link"
-        >
-          <span className="mono">{menuOpen ? "Close" : "Menu"}</span>
-          <span className="navmenu__bars" aria-hidden="true">
-            <span></span><span></span><span></span>
-          </span>
-        </button>
-      </div>
-
-      <div className={`navmenu ${menuOpen ? "is-open" : ""}`} aria-hidden={!menuOpen}>
-        <div className="navmenu__head mono dim">
-          <span>— Quick actions</span>
-          <span>Press ESC to close</span>
-        </div>
-        <div className="navmenu__actions">
-          <button className="navmenu__cta" onClick={() => go("work")} data-cursor="view">
-            <span className="mono dim">01</span>
-            <span className="serif navmenu__cta-title">Browse the work</span>
-            <span className="mono dim navmenu__cta-sub">9 selected projects · 5 disciplines</span>
-            <span className="navmenu__arrow">→</span>
-          </button>
-          <button className="navmenu__cta" onClick={() => go("contact")} data-cursor="view">
-            <span className="mono dim">02</span>
-            <span className="serif navmenu__cta-title">Start a conversation</span>
-            <span className="mono dim navmenu__cta-sub">Booking Q3 — reply within two days</span>
-            <span className="navmenu__arrow">→</span>
-          </button>
-        </div>
-        <div className="navmenu__links">
-          <a href="mailto:hello@iriswynn.studio" className="navmenu__link" data-cursor="link">
-            <span className="mono dim">Email</span>
-            <span>hello@iriswynn.studio</span>
-            <span className="navmenu__arrow">↗</span>
-          </a>
-          <a href="#" className="navmenu__link" data-cursor="link">
-            <span className="mono dim">Are.na</span>
-            <span>@iriswynn</span>
-            <span className="navmenu__arrow">↗</span>
-          </a>
-          <a href="#" className="navmenu__link" data-cursor="link">
-            <span className="mono dim">Read</span>
-            <span>Notes — a slow journal</span>
-            <span className="navmenu__arrow">↗</span>
-          </a>
-        </div>
       </div>
     </nav>
   );
