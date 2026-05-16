@@ -512,6 +512,256 @@
   .mk-poster__rule{ height: 1px; width: 100%; }
   .mk-poster__feet{ display: flex; justify-content: space-between; font-size: 1.4cqw; opacity: 0.7; }
 
+  /* ─── Case-study supporting shots (idx 1..4) ─────────────────────────── */
+  /* All shots are absolutely positioned inside the .mk container query so
+     cqw units scale with the parent's width regardless of aspect ratio. */
+  .mk-shot{ position: absolute; inset: 0; padding: 3cqw; box-sizing: border-box; }
+  .mk-shot--col{ display: flex; flex-direction: column; gap: 1.6cqw; padding: 3.4cqw; }
+  .mk-shot--cols2{ display: grid; grid-template-columns: 1fr 1fr; gap: 2cqw; padding: 3cqw; }
+  .mk-shot--phonewrap{ display: flex; align-items: center; justify-content: center; padding: 3cqw; }
+  .mk-shot--cover{ display: flex; flex-direction: column; padding: 4cqw 3.6cqw; gap: 2cqw; }
+
+  .mk-shot__panel{ padding: 2cqw; border-radius: 0.6cqw;
+                   display: flex; flex-direction: column; gap: 1.2cqw; min-width: 0; }
+  .mk-shot__lbl{ font-family: var(--font-mono); font-size: 1.6cqw;
+                 letter-spacing: 0.08em; text-transform: uppercase; opacity: 0.6; }
+  .mk-shot__hd{ padding-bottom: 1.2cqw;
+                border-bottom: 1px solid color-mix(in oklab, currentColor 14%, transparent); }
+  .mk-shot__bigh{ font-family: var(--font-display); font-size: 11cqw; line-height: 0.95;
+                  margin: 0; font-weight: 400; letter-spacing: -0.015em; }
+
+  /* Segmented control + form fields */
+  .mk-shot__seg{ display: flex; gap: 0.3cqw; padding: 0.3cqw;
+                 background: color-mix(in oklab, currentColor 8%, transparent);
+                 border-radius: 0.5cqw; }
+  .mk-shot__segBtn{ flex: 1; padding: 1cqw 0; text-align: center; border-radius: 0.35cqw;
+                    font-family: var(--font-mono); font-size: 1.5cqw;
+                    text-transform: uppercase; letter-spacing: 0.08em; opacity: 0.55; }
+  .mk-shot__segBtn--on{ opacity: 1; }
+  .mk-shot__field{ display: flex; justify-content: space-between; align-items: baseline;
+                   padding: 1.2cqw 0;
+                   border-bottom: 1px solid color-mix(in oklab, currentColor 12%, transparent); }
+  .mk-shot__fv{ font-size: 3.4cqw; }
+  .mk-shot__btn{ padding: 1.4cqw; text-align: center; border-radius: 0.5cqw;
+                 font-family: var(--font-mono); font-size: 1.6cqw;
+                 letter-spacing: 0.08em; text-transform: uppercase; margin-top: auto; }
+
+  /* Metric rows */
+  .mk-shot__rows{ display: flex; flex-direction: column; }
+  .mk-shot__row{ display: flex; justify-content: space-between; align-items: baseline;
+                 padding: 1cqw 0;
+                 border-bottom: 1px solid color-mix(in oklab, currentColor 10%, transparent);
+                 font-size: 1.8cqw; }
+  .mk-shot__row:last-child{ border-bottom: 0; }
+  .mk-shot__rowv{ font-size: 2.8cqw; }
+
+  /* List variants */
+  .mk-shot__list{ display: flex; flex-direction: column; }
+  .mk-shot__listrow{ display: grid; grid-template-columns: 8cqw 10cqw 1fr 9cqw;
+                     gap: 1.4cqw; align-items: center; padding: 0.9cqw 0;
+                     border-bottom: 1px solid color-mix(in oklab, currentColor 8%, transparent);
+                     font-size: 1.8cqw; }
+  .mk-shot__listrow:last-child{ border-bottom: 0; }
+  .mk-shot__listprice{ font-size: 2.4cqw; }
+  .mk-shot__listspark{ height: 3cqw; width: 100%; }
+  .mk-shot__listpct{ text-align: right; }
+
+  /* Bar chart */
+  .mk-shot__chartbars{ display: flex; align-items: end; gap: 0.4cqw; height: 20cqw; }
+  .mk-shot__chartbars > div{ flex: 1; border-radius: 0.15cqw; }
+
+  /* Order book */
+  .mk-shot__book{ display: flex; flex-direction: column; gap: 0.5cqw; min-height: 0; }
+  .mk-shot__bookrow{ display: grid; grid-template-columns: 6cqw 1fr 5cqw;
+                     gap: 1cqw; align-items: center; font-size: 1.5cqw; }
+  .mk-shot__bookbar{ height: 1.2cqw; border-radius: 0.2cqw; }
+  .mk-shot__spread{ padding: 0.6cqw 0; text-align: center;
+                    border-top: 1px dashed color-mix(in oklab, currentColor 25%, transparent);
+                    border-bottom: 1px dashed color-mix(in oklab, currentColor 25%, transparent);
+                    margin: 0.4cqw 0; }
+
+  /* Phone shape */
+  .mk-shot__phone{ width: 56cqw; aspect-ratio: 9 / 16; max-height: 100%;
+                   border-radius: 4cqw; border: 1px solid;
+                   overflow: hidden; position: relative; padding-top: 4cqw;
+                   display: flex; flex-direction: column; }
+  .mk-shot__phoneNotch{ position: absolute; top: 1.4cqw; left: 50%;
+                        transform: translateX(-50%);
+                        width: 14cqw; height: 1.6cqw; border-radius: 99cqw;
+                        background: currentColor; opacity: 0.4; }
+  .mk-shot__phoneBar{ padding: 1.6cqw 2.4cqw; font-size: 1.6cqw; }
+  .mk-shot__phoneBrand{ font-size: 3cqw; }
+  .mk-shot__phoneStat{ padding: 2cqw 2.4cqw 1cqw; display: flex; flex-direction: column; gap: 0.4cqw; }
+  .mk-shot__phoneBig{ font-size: 5.4cqw; line-height: 1; }
+  .mk-shot__phoneList{ padding: 0 2.4cqw; display: flex; flex-direction: column; }
+  .mk-shot__phoneRow{ display: flex; justify-content: space-between;
+                      padding: 1.2cqw 0;
+                      border-bottom: 1px solid color-mix(in oklab, currentColor 8%, transparent);
+                      font-size: 1.8cqw; }
+  .mk-shot__phoneArticle{ padding: 2cqw 2.4cqw; display: flex; flex-direction: column; gap: 1cqw; }
+  .mk-shot__phoneArt-h{ font-family: var(--font-display); font-size: 5cqw;
+                        line-height: 1; margin: 0.4cqw 0 0; font-weight: 400; }
+  .mk-shot__phoneArt-lines{ display: flex; flex-direction: column; gap: 0.5cqw; margin-top: 1cqw; }
+  .mk-shot__phoneObsRow{ display: flex; justify-content: space-between; align-items: center;
+                         padding: 1.2cqw 0; gap: 1cqw;
+                         border-bottom: 1px solid color-mix(in oklab, currentColor 8%, transparent);
+                         font-size: 1.8cqw; }
+  .mk-shot__phoneObsId{ font-size: 1.4cqw; margin-bottom: 0.2cqw; }
+  .mk-shot__phoneMapMini{ aspect-ratio: 16 / 10; border-radius: 1cqw; overflow: hidden; }
+
+  /* Text-line bars (editorial body text) */
+  .mk-shot__lines{ display: flex; flex-direction: column; gap: 0.6cqw; }
+  .mk-shot__line{ height: 0.7cqw; opacity: 0.4; border-radius: 0.2cqw; }
+
+  /* Cover layout (Marrow, Field Notes, Northmark) */
+  .mk-shot__coverHd{ display: flex; justify-content: space-between; align-items: baseline; }
+  .mk-shot__coverBrand{ font-size: 4cqw; }
+  .mk-shot__coverBody{ flex: 1; display: flex; flex-direction: column;
+                       justify-content: center; gap: 1.4cqw; }
+  .mk-shot__coverTitle{ font-family: var(--font-display); font-size: 11cqw;
+                        line-height: 0.94; margin: 0; font-weight: 400; }
+  .mk-shot__coverFt{ display: flex; justify-content: space-between;
+                     padding-top: 1.4cqw;
+                     border-top: 1px solid color-mix(in oklab, currentColor 14%, transparent); }
+
+  /* Type specimen */
+  .mk-shot__specBig{ flex: 1; display: flex; align-items: center; justify-content: center;
+                     overflow: hidden; }
+
+  /* Kanban */
+  .mk-shot__kb{ display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.4cqw;
+                flex: 1; min-height: 0; }
+  .mk-shot__kbCol{ display: flex; flex-direction: column; gap: 1cqw; min-width: 0; }
+  .mk-shot__kbHd{ display: flex; justify-content: space-between;
+                  padding: 0 0.2cqw 0.6cqw;
+                  font-family: var(--font-mono); font-size: 1.4cqw;
+                  text-transform: uppercase; letter-spacing: 0.06em; opacity: 0.7; }
+  .mk-shot__kbCard{ padding: 1.4cqw; border-radius: 0.5cqw;
+                    font-size: 1.6cqw; display: flex; flex-direction: column; gap: 0.5cqw; }
+
+  /* Pill (status) */
+  .mk-shot__pill{ display: inline-block; padding: 0.4cqw 1.2cqw; border: 1px solid;
+                  border-radius: 99cqw; font-size: 1.4cqw; }
+
+  /* Audit log */
+  .mk-shot__audit{ display: flex; flex-direction: column; }
+  .mk-shot__auditRow{ display: grid; grid-template-columns: 8cqw 2cqw 1fr;
+                      gap: 1.2cqw; align-items: center; padding: 1cqw 0;
+                      border-bottom: 1px solid color-mix(in oklab, currentColor 8%, transparent);
+                      font-size: 1.8cqw; }
+  .mk-shot__auditRow:last-child{ border-bottom: 0; }
+  .mk-shot__auditDot{ width: 0.8cqw; height: 0.8cqw; border-radius: 50%; justify-self: center; }
+
+  /* Linnea label / set / mark */
+  .mk-shot__linneaBottle{ width: 38cqw; aspect-ratio: 4 / 5.5;
+                          border: 1px solid; border-radius: 0.8cqw;
+                          padding: 3cqw 2.4cqw; display: flex; flex-direction: column;
+                          align-items: center; justify-content: center; gap: 1.4cqw;
+                          margin: auto; }
+  .mk-shot__linneaLbl{ letter-spacing: 0.2cqw; }
+  .mk-shot__linneaName{ font-size: 7cqw; font-style: italic; letter-spacing: -0.01em; }
+  .mk-shot__linneaSub{ text-align: center; font-size: 1.4cqw; line-height: 1.4; opacity: 0.7; }
+  .mk-shot__linneaRule{ width: 60%; height: 1px; opacity: 0.4; }
+  .mk-shot__linneaIng{ font-size: 1.3cqw; opacity: 0.7; text-align: center; }
+  .mk-shot__linneaMark{ width: 24cqw; height: 24cqw; border-radius: 50%;
+                        display: grid; place-items: center; }
+  .mk-shot__linneaShelf{ display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.6cqw;
+                         flex: 1; align-items: end; }
+  .mk-shot__linneaSet{ display: flex; flex-direction: column; align-items: center; gap: 0.6cqw; }
+  .mk-shot__linneaSetBottle{ width: 100%; aspect-ratio: 3 / 5; border: 1px solid;
+                             border-radius: 0.6cqw; display: grid; place-items: center; }
+  .mk-shot__linneaSetName{ font-size: 2.2cqw; }
+
+  /* Business card */
+  .mk-shot__card{ aspect-ratio: 16 / 10; border: 1px solid; border-radius: 0.4cqw;
+                  padding: 2cqw; display: flex; flex-direction: column;
+                  justify-content: space-between; }
+  .mk-shot__cardName{ font-size: 5cqw; font-style: italic; }
+  .mk-shot__cardMeta{ display: flex; flex-direction: column; gap: 0.4cqw;
+                      font-family: var(--font-mono); font-size: 1.3cqw; }
+
+  /* Zine page (Field Notes single page) */
+  .mk-shot__zinePage{ flex: 1; padding: 2.6cqw 2.4cqw; border-radius: 0.4cqw;
+                      display: flex; flex-direction: column; gap: 1.4cqw; }
+  .mk-shot__zineH{ font-family: var(--font-display); font-size: 6.6cqw;
+                   line-height: 0.95; margin: 0; font-weight: 400; }
+  .mk-shot__zineFlow{ display: grid; grid-template-columns: 1fr 1fr; gap: 1.6cqw;
+                      margin-top: auto; }
+  .mk-shot__zineCol{ display: flex; flex-direction: column; gap: 0.5cqw; }
+  .mk-shot__dropcap{ display: grid; grid-template-columns: auto 1fr; gap: 2cqw;
+                     align-items: start; }
+  .mk-shot__dropcapLetter{ font-size: 18cqw; line-height: 0.85; }
+  .mk-shot__dropcapLines{ padding-top: 1cqw; }
+
+  /* Field Notes issue grid */
+  .mk-shot__issueGrid{ display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.4cqw;
+                       flex: 1; min-height: 0; }
+  .mk-shot__issue{ border-radius: 0.4cqw; padding: 1.6cqw 1.4cqw;
+                   display: flex; flex-direction: column; justify-content: space-between; }
+  .mk-shot__issueName{ font-size: 3.4cqw; font-style: italic; }
+
+  /* Atlas: route + progress */
+  .mk-shot__route{ border-radius: 0.4cqw; padding: 2cqw; min-height: 14cqw; }
+  .mk-shot__route svg{ width: 100%; height: 100%; display: block; }
+  .mk-shot__progress{ height: 0.8cqw; border-radius: 99cqw; overflow: hidden;
+                      margin-top: auto; }
+  .mk-shot__progress > span{ display: block; height: 100%; border-radius: inherit; }
+
+  /* Northmark: portfolio grid + big facts */
+  .mk-shot__firmGrid{ display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.2cqw;
+                      flex: 1; }
+  .mk-shot__firmCard{ padding: 1.4cqw; border-radius: 0.4cqw;
+                      display: flex; flex-direction: column; gap: 0.4cqw; }
+  .mk-shot__firmName{ font-size: 2.6cqw; font-style: italic; }
+  .mk-shot__statsGrid{ display: grid; grid-template-columns: 1fr 1fr; gap: 2cqw; }
+  .mk-shot__bigFact{ display: flex; flex-direction: column; gap: 0.4cqw; }
+  .mk-shot__bigFactN{ font-size: 9cqw; line-height: 0.95; }
+
+  /* Halen: index, about, plan */
+  .mk-shot__index{ display: flex; flex-direction: column; flex: 1; }
+  .mk-shot__indexRow{ display: grid; grid-template-columns: 4cqw 1fr 1fr 6cqw;
+                      gap: 1.6cqw; align-items: baseline; padding: 1cqw 0;
+                      border-bottom: 1px solid color-mix(in oklab, currentColor 10%, transparent);
+                      font-size: 1.8cqw; }
+  .mk-shot__indexRow:last-child{ border-bottom: 0; }
+  .mk-shot__halenScene{ flex: 1; border-radius: 0.4cqw; padding: 1.4cqw;
+                        display: flex; align-items: end; }
+  .mk-shot__halenAbout{ display: grid; grid-template-columns: 1fr 1fr; gap: 2cqw; flex: 1; }
+  .mk-shot__halenPortrait{ aspect-ratio: 3 / 4; border: 1px solid;
+                           border-radius: 0.4cqw; padding: 1.4cqw;
+                           display: flex; align-items: end; }
+  .mk-shot__plan{ flex: 1; border-radius: 0.4cqw; padding: 1.4cqw; }
+
+  /* Kindred: wide poster, tall poster, paste-up */
+  .mk-shot__posterWide{ position: absolute; inset: 3cqw; border-radius: 0.4cqw;
+                        display: flex; flex-direction: column;
+                        justify-content: space-between; }
+  .mk-shot__posterWideBody{ flex: 1; display: flex; flex-direction: column;
+                            justify-content: center; align-items: center; gap: 1cqw;
+                            padding: 2cqw 4cqw; }
+  .mk-shot__posterWideH{ font-size: 18cqw; line-height: 0.9; letter-spacing: -0.02em; }
+  .mk-shot__posterWideSub{ font-size: 3cqw; }
+  .mk-shot__posterTall{ width: 56cqw; aspect-ratio: 2 / 3; border-radius: 0.4cqw;
+                        display: flex; flex-direction: column; justify-content: space-between;
+                        margin: auto; }
+  .mk-shot__posterTallBody{ flex: 1; display: flex; align-items: center; justify-content: center;
+                            padding: 2cqw; }
+  .mk-shot__posterTallH{ font-size: 22cqw; line-height: 0.85; letter-spacing: -0.02em;
+                         text-align: center; }
+  .mk-shot__posterTallFt{ padding: 0 3cqw 2cqw; }
+  .mk-shot__posterTallActs{ display: flex; flex-wrap: wrap; gap: 0.4cqw 1.4cqw;
+                            font-size: 1.4cqw; opacity: 0.8; padding-top: 0.8cqw; }
+  .mk-shot__pasteup{ position: absolute; inset: 3cqw; border-radius: 0.4cqw;
+                     padding: 3cqw; display: grid;
+                     grid-template-columns: 1fr 1fr 1fr 1fr; gap: 1.4cqw;
+                     align-content: center; }
+  .mk-shot__pasteupP{ aspect-ratio: 2 / 3; border-radius: 0.3cqw;
+                      padding: 1.4cqw; display: flex; flex-direction: column;
+                      justify-content: space-between;
+                      box-shadow: 0 1cqw 2.4cqw rgba(0, 0, 0, 0.4); }
+  .mk-shot__pasteupN{ font-size: 1.3cqw; opacity: 0.7; }
+  .mk-shot__pasteupT{ font-size: 3.2cqw; line-height: 0.95; align-self: end; }
+
   /* ─── Case study ─────────────────────────────────────────────────────── */
   .cs{ position: fixed; inset: 0; z-index: 100; display: grid; place-items: center; }
   .cs__scrim{

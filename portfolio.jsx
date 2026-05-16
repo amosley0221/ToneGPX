@@ -456,11 +456,819 @@ const MOCKUPS = {
   ),
 };
 
-function Mockup({ project, ratio = "4 / 3" }) {
-  const render = MOCKUPS[project.id];
-  if (!render) return <Placeholder project={project} idx={0} ratio={ratio} />;
+// Supporting case-study shots (idx 1..4). Each project shows a different
+// facet of the same product/brand so the case study reads like a real
+// portfolio entry, not five copies of the hero.
+const SHOTS = {
+  vantage: {
+    1: ([bg, surf, ink, tone]) => (
+      <div className="mk-shot mk-shot--cols2" style={{ color: ink }}>
+        <div className="mk-shot__panel" style={{ background: surf }}>
+          <span className="mk-shot__lbl">Order ticket · SPY</span>
+          <div className="mk-shot__seg" style={{ background: bg }}>
+            <span className="mk-shot__segBtn mk-shot__segBtn--on" style={{ background: tone, color: bg }}>Buy</span>
+            <span className="mk-shot__segBtn">Sell</span>
+          </div>
+          {[["Limit", "412.80"], ["Qty", "2,400"], ["Stop", "408.50"]].map(([k, v]) => (
+            <div key={k} className="mk-shot__field"><span className="mk-shot__lbl">{k}</span><span className="mk-mark mk-shot__fv">{v}</span></div>
+          ))}
+          <div className="mk-shot__btn" style={{ background: tone, color: bg }}>Submit order</div>
+        </div>
+        <div className="mk-shot__panel" style={{ background: surf }}>
+          <span className="mk-shot__lbl">Depth · book</span>
+          <div className="mk-shot__book">
+            {[8, 6, 4, 2].map((d, i) => (
+              <div key={"a" + i} className="mk-shot__bookrow">
+                <span className="mk-mono mk-dim">412.{String(84 - i).padStart(2, "0")}</span>
+                <div className="mk-shot__bookbar" style={{ background: ink, opacity: 0.22, width: `${10 + d * 6}%` }} />
+                <span className="mk-mono mk-dim">{d * 200}</span>
+              </div>
+            ))}
+            <div className="mk-shot__spread">
+              <span className="mk-mono mk-dim">SPREAD · 0.02</span>
+            </div>
+            {[2, 4, 6, 8].map((d, i) => (
+              <div key={"b" + i} className="mk-shot__bookrow">
+                <span className="mk-mono" style={{ color: tone }}>412.{String(80 - i).padStart(2, "0")}</span>
+                <div className="mk-shot__bookbar" style={{ background: tone, opacity: 0.55, width: `${10 + d * 6}%` }} />
+                <span className="mk-mono">{d * 180}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    ),
+    2: ([bg, surf, ink, tone]) => (
+      <div className="mk-shot mk-shot--col" style={{ color: ink }}>
+        <span className="mk-shot__lbl">Risk · End of day</span>
+        <h3 className="mk-shot__bigh" style={{ color: tone }}>+2.4%</h3>
+        <span className="mk-mono mk-dim">VaR (95%) · last 30 days</span>
+        <div className="mk-shot__chartbars">
+          {Array.from({ length: 30 }).map((_, i) => (
+            <div key={i} style={{ height: `${30 + ((i * 17) % 60)}%`, background: i === 22 ? tone : ink, opacity: i === 22 ? 1 : 0.32 }} />
+          ))}
+        </div>
+        <div className="mk-shot__rows">
+          {[["Exposure", "$184.2M"], ["Net delta", "+0.62"], ["Hedge ratio", "0.78"], ["Stress −5%", "−$8.4M"]].map(([k, v]) => (
+            <div key={k} className="mk-shot__row">
+              <span className="mk-shot__lbl">{k}</span>
+              <span className="mk-mark mk-shot__rowv">{v}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    ),
+    3: ([bg, surf, ink, tone]) => (
+      <div className="mk-shot mk-shot--col" style={{ color: ink }}>
+        <div className="mk-shot__hd">
+          <span className="mk-shot__lbl">Watchlist · Sector tech</span>
+          <span className="mk-mono mk-dim">12 / 28</span>
+        </div>
+        <div className="mk-shot__list">
+          {["AAPL", "MSFT", "NVDA", "TSLA", "META", "GOOG", "AMZN", "ADBE", "CRM", "ORCL", "INTC", "AMD"].map((t, i) => {
+            const up = (i + 1) % 3 !== 0;
+            const pts = Array.from({ length: 16 }).map((_, j) => `${j * 3.4},${8 + Math.sin((i + 1) * j * 0.5 + 0.3) * 4.5}`).join(" ");
+            return (
+              <div key={t} className="mk-shot__listrow">
+                <span className="mk-mono">{t}</span>
+                <span className="mk-mark mk-shot__listprice">{(180 + i * 23).toFixed(2)}</span>
+                <svg viewBox="0 0 60 16" preserveAspectRatio="none" className="mk-shot__listspark">
+                  <polyline points={pts} stroke={up ? tone : ink} strokeOpacity="0.75" strokeWidth="0.8" fill="none" />
+                </svg>
+                <span className="mk-mono mk-shot__listpct" style={{ color: up ? tone : ink, opacity: up ? 1 : 0.55 }}>
+                  {up ? "+" : "−"}{(0.2 + i * 0.13).toFixed(2)}%
+                </span>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    ),
+    4: ([bg, surf, ink, tone]) => (
+      <div className="mk-shot mk-shot--phonewrap">
+        <div className="mk-shot__phone" style={{ background: bg, color: ink, borderColor: "color-mix(in oklab, currentColor 22%, transparent)" }}>
+          <div className="mk-shot__phoneNotch" />
+          <div className="mk-row mk-shot__phoneBar">
+            <span className="mk-mark mk-shot__phoneBrand">V</span>
+            <span className="mk-mono mk-dim">Positions</span>
+            <span className="mk-mono mk-dim">···</span>
+          </div>
+          <div className="mk-shot__phoneStat">
+            <span className="mk-shot__lbl">Total P/L</span>
+            <span className="mk-mark mk-shot__phoneBig" style={{ color: tone }}>+$24,180</span>
+            <span className="mk-mono mk-dim">+2.4% today</span>
+          </div>
+          <div className="mk-shot__phoneList">
+            {["AAPL", "NVDA", "MSFT", "TSLA", "META"].map((t, i) => {
+              const up = i % 2 === 0;
+              return (
+                <div key={t} className="mk-shot__phoneRow">
+                  <span className="mk-mono">{t}</span>
+                  <span className="mk-mono" style={{ color: up ? tone : ink, opacity: up ? 1 : 0.55 }}>
+                    {up ? "+" : "−"}{(0.3 + i * 0.4).toFixed(2)}%
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+    ),
+  },
+
+  marrow: {
+    1: ([bg, surf, ink, tone]) => (
+      <div className="mk-shot mk-shot--col" style={{ color: ink, padding: "4cqw 5cqw" }}>
+        <span className="mk-shot__lbl">Long read · Vol. III</span>
+        <h3 className="mk-shot__bigh" style={{ fontSize: "9cqw" }}>
+          The <em style={{ fontStyle: "italic", color: tone }}>quiet</em><br />act of editing.
+        </h3>
+        <span className="mk-mono mk-dim">By Camille Mercer · 12 min read</span>
+        <div className="mk-shot__lines">
+          {Array.from({ length: 11 }).map((_, i) => (
+            <span key={i} className="mk-shot__line" style={{ background: ink, width: `${70 + (i * 11) % 30}%` }} />
+          ))}
+        </div>
+      </div>
+    ),
+    2: ([bg, surf, ink, tone]) => (
+      <div className="mk-shot mk-shot--cover" style={{ color: ink, background: surf }}>
+        <div className="mk-shot__coverHd">
+          <span className="mk-mark mk-shot__coverBrand"><em style={{ fontStyle: "italic" }}>Marrow</em></span>
+          <span className="mk-mono mk-dim">Vol. 14 · Spring</span>
+        </div>
+        <div className="mk-shot__coverBody">
+          <span className="mk-mono mk-dim">Inside —</span>
+          <h3 className="mk-shot__coverTitle">
+            On <em style={{ fontStyle: "italic", color: tone }}>silence</em><br />in the studio.
+          </h3>
+          <span className="mk-mono mk-dim">+ five essays, three interviews, an archive.</span>
+        </div>
+        <div className="mk-shot__coverFt mk-mono mk-dim">
+          <span>€14 / Quarterly</span>
+          <span>ISSN 2766-1413</span>
+        </div>
+      </div>
+    ),
+    3: ([bg, surf, ink, tone]) => (
+      <div className="mk-shot mk-shot--col" style={{ color: ink, padding: "3cqw" }}>
+        <span className="mk-shot__lbl">Type · Display set</span>
+        <div className="mk-shot__specBig">
+          <span className="mk-mark" style={{ fontSize: "44cqw", lineHeight: 0.82, color: tone }}>M</span>
+        </div>
+        <div className="mk-shot__rows">
+          {[["72 / Display", "Marrow"], ["48 / Subhead", "Marrow"], ["28 / Body", "Marrow"], ["14 / Caption", "Marrow"]].map(([k, v]) => (
+            <div key={k} className="mk-shot__row">
+              <span className="mk-shot__lbl">{k}</span>
+              <span className="mk-mark mk-shot__rowv" style={{ fontStyle: "italic" }}>{v}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    ),
+    4: ([bg, surf, ink, tone]) => (
+      <div className="mk-shot mk-shot--phonewrap">
+        <div className="mk-shot__phone" style={{ background: bg, color: ink, borderColor: "color-mix(in oklab, currentColor 22%, transparent)" }}>
+          <div className="mk-shot__phoneNotch" />
+          <div className="mk-row mk-shot__phoneBar">
+            <span className="mk-mark" style={{ fontSize: "2.6cqw", fontStyle: "italic" }}>Marrow</span>
+            <span className="mk-mono mk-dim">Issue 14</span>
+          </div>
+          <div className="mk-shot__phoneArticle">
+            <span className="mk-mono mk-dim">— Long read</span>
+            <h4 className="mk-shot__phoneArt-h">On the <em style={{ color: tone, fontStyle: "italic" }}>quiet</em> act<br />of editing.</h4>
+            <div className="mk-shot__phoneArt-lines">
+              {Array.from({ length: 9 }).map((_, i) => (
+                <span key={i} style={{ background: ink, opacity: 0.45, height: "0.6cqw", borderRadius: "0.2cqw", width: `${72 + (i * 9) % 26}%` }} />
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    ),
+  },
+
+  halen: {
+    1: ([bg, surf, ink, tone]) => (
+      <div className="mk-shot mk-shot--col" style={{ color: ink, padding: "3.4cqw" }}>
+        <div className="mk-row" style={{ paddingBottom: "1.4cqw", borderBottom: "1px solid color-mix(in oklab, currentColor 12%, transparent)" }}>
+          <span className="mk-mark" style={{ fontSize: "2.6cqw", letterSpacing: "0.4cqw" }}>HALEN</span>
+          <span className="mk-mono mk-dim">Projects / 04</span>
+        </div>
+        <span className="mk-mono mk-dim">— Casa Ourique · Lisbon · 2024</span>
+        <h3 className="mk-shot__bigh" style={{ fontSize: "7cqw" }}>A house built<br />around <em style={{ fontStyle: "italic", color: tone }}>silence</em>.</h3>
+        <div className="mk-shot__halenScene" style={{ background: surf }}>
+          <svg viewBox="0 0 200 80" preserveAspectRatio="xMidYMax meet" className="mk-arch__svg">
+            <rect x="0" y="64" width="200" height="16" fill={bg} />
+            <rect x="20" y="20" width="76" height="44" fill={bg} stroke={ink} strokeOpacity="0.18" />
+            <rect x="96" y="32" width="60" height="32" fill={bg} stroke={ink} strokeOpacity="0.14" />
+            <polygon points="20,20 58,4 96,20" fill={tone} fillOpacity="0.5" />
+            {Array.from({ length: 7 }).map((_, i) => (<rect key={i} x={28 + i * 9} y="34" width="3" height="6" fill={surf} />))}
+            {Array.from({ length: 4 }).map((_, i) => (<rect key={"r" + i} x={104 + i * 12} y="44" width="4" height="6" fill={surf} />))}
+          </svg>
+        </div>
+      </div>
+    ),
+    2: ([bg, surf, ink, tone]) => (
+      <div className="mk-shot mk-shot--col" style={{ color: ink, padding: "3.4cqw" }}>
+        <span className="mk-shot__lbl">Index of projects</span>
+        <div className="mk-shot__index">
+          {[
+            ["01", "Casa Ourique", "Lisbon", "2024"],
+            ["02", "Pavilion N", "Sintra", "2023"],
+            ["03", "House on a Slope", "Cascais", "2022"],
+            ["04", "Atrium 11", "Porto", "2022"],
+            ["05", "Reading Room", "Évora", "2021"],
+            ["06", "Stair Study", "Lisbon", "2021"],
+            ["07", "Library Pavilion", "Madrid", "2020"],
+          ].map(([n, name, place, year]) => (
+            <div key={n} className="mk-shot__indexRow">
+              <span className="mk-mono mk-dim">{n}</span>
+              <span className="mk-mark" style={{ fontSize: "2.6cqw" }}>{name}</span>
+              <span className="mk-mono mk-dim">{place}</span>
+              <span className="mk-mono">{year}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    ),
+    3: ([bg, surf, ink, tone]) => (
+      <div className="mk-shot mk-shot--col" style={{ color: ink, padding: "3.4cqw" }}>
+        <span className="mk-shot__lbl">Studio</span>
+        <h3 className="mk-shot__bigh" style={{ fontSize: "6.8cqw" }}>
+          We design<br /><em style={{ fontStyle: "italic", color: tone }}>quiet</em> buildings<br />for long lives.
+        </h3>
+        <div className="mk-shot__halenAbout">
+          <div className="mk-shot__halenPortrait" style={{ background: surf, borderColor: "color-mix(in oklab, currentColor 14%, transparent)" }}>
+            <span className="mk-mono mk-dim">HALEN · 2008 — present</span>
+          </div>
+          <div className="mk-shot__lines">
+            {Array.from({ length: 8 }).map((_, i) => (
+              <span key={i} className="mk-shot__line" style={{ background: ink, width: `${74 + (i * 7) % 24}%` }} />
+            ))}
+          </div>
+        </div>
+      </div>
+    ),
+    4: ([bg, surf, ink, tone]) => (
+      <div className="mk-shot mk-shot--col" style={{ color: ink, padding: "3.4cqw" }}>
+        <span className="mk-shot__lbl">Plan · Casa Ourique / GF</span>
+        <div className="mk-shot__plan" style={{ background: surf }}>
+          <svg viewBox="0 0 200 130" preserveAspectRatio="xMidYMid meet" className="mk-arch__svg">
+            <rect x="10" y="10" width="180" height="110" fill="none" stroke={ink} strokeOpacity="0.5" strokeWidth="0.8" />
+            <line x1="100" y1="10" x2="100" y2="80" stroke={ink} strokeOpacity="0.3" strokeWidth="0.5" />
+            <line x1="10" y1="80" x2="190" y2="80" stroke={ink} strokeOpacity="0.3" strokeWidth="0.5" />
+            <line x1="100" y1="80" x2="100" y2="120" stroke={ink} strokeOpacity="0.3" strokeWidth="0.5" />
+            <rect x="40" y="32" width="20" height="10" fill={tone} fillOpacity="0.6" />
+            <rect x="130" y="32" width="20" height="10" fill={tone} fillOpacity="0.6" />
+            <circle cx="50" cy="100" r="10" fill="none" stroke={ink} strokeOpacity="0.35" strokeWidth="0.6" />
+            <text x="20" y="76" fontSize="6" fill={ink} opacity="0.6" fontFamily="monospace">LIVING</text>
+            <text x="115" y="76" fontSize="6" fill={ink} opacity="0.6" fontFamily="monospace">STUDY</text>
+            <text x="20" y="116" fontSize="6" fill={ink} opacity="0.6" fontFamily="monospace">PATIO</text>
+          </svg>
+        </div>
+        <div className="mk-row mk-mono mk-dim">
+          <span>Scale 1:200</span>
+          <span>180 m²</span>
+        </div>
+      </div>
+    ),
+  },
+
+  obsidian: {
+    1: ([bg, surf, ink, tone]) => (
+      <div className="mk-shot mk-shot--col" style={{ color: ink, padding: "3cqw" }}>
+        <div className="mk-row mk-shot__hd">
+          <span className="mk-shot__lbl">Routing board</span>
+          <span className="mk-mono mk-dim">42 active · 3 lanes</span>
+        </div>
+        <div className="mk-shot__kb">
+          {[
+            ["Inbox", 4, ink],
+            ["Routing", 3, tone],
+            ["Delivered", 5, ink],
+          ].map(([lane, n, accent], li) => (
+            <div key={lane} className="mk-shot__kbCol">
+              <div className="mk-shot__kbHd"><span>{lane}</span><span>{n}</span></div>
+              {Array.from({ length: n }).map((_, i) => (
+                <div key={i} className="mk-shot__kbCard" style={{ background: surf, borderLeft: `2px solid ${accent}` }}>
+                  <span className="mk-mono mk-dim">OB-20{li * 4 + i + 41}</span>
+                  <span>{["Mercer & Co.", "Studio Brackish", "Verre", "Linnea Apo.", "Northmark", "Field Notes"][((li + i) * 2) % 6]}</span>
+                  <span className="mk-mono" style={{ color: accent, opacity: accent === tone ? 1 : 0.5 }}>${(i + li + 1) * 480}</span>
+                </div>
+              ))}
+            </div>
+          ))}
+        </div>
+      </div>
+    ),
+    2: ([bg, surf, ink, tone]) => (
+      <div className="mk-shot mk-shot--col" style={{ color: ink, padding: "3cqw" }}>
+        <div className="mk-row" style={{ paddingBottom: "1.4cqw", borderBottom: "1px solid color-mix(in oklab, currentColor 12%, transparent)" }}>
+          <span className="mk-shot__lbl">Order · OB-2041</span>
+          <span className="mk-mono mk-shot__pill" style={{ color: tone, borderColor: tone }}>Packing</span>
+        </div>
+        <h3 className="mk-shot__bigh" style={{ fontSize: "5.2cqw" }}>Mercer & Co.</h3>
+        <span className="mk-mono mk-dim">Routed via Lisbon → Cascais</span>
+        <div className="mk-shot__rows">
+          {[["Items", "8"], ["Weight", "12.4 kg"], ["Value", "$3,840"], ["Carrier", "MX-902"], ["ETA", "Wed 14:20"]].map(([k, v]) => (
+            <div key={k} className="mk-shot__row">
+              <span className="mk-shot__lbl">{k}</span>
+              <span className="mk-mark mk-shot__rowv">{v}</span>
+            </div>
+          ))}
+        </div>
+        <div className="mk-shot__btn" style={{ background: ink, color: bg, marginTop: "auto" }}>Open routing →</div>
+      </div>
+    ),
+    3: ([bg, surf, ink, tone]) => (
+      <div className="mk-shot mk-shot--col" style={{ color: ink, padding: "3cqw" }}>
+        <span className="mk-shot__lbl">Audit · last 24h</span>
+        <div className="mk-shot__audit">
+          {[
+            ["09:14", "OB-2041 quoted", "Held"],
+            ["09:22", "OB-2042 routed", null],
+            ["09:38", "OB-2043 packed", null],
+            ["10:02", "OB-2041 held", "Tone"],
+            ["10:14", "OB-2042 dispatched", null],
+            ["10:31", "OB-2044 quoted", null],
+            ["11:02", "OB-2041 released", "Tone"],
+            ["11:18", "OB-2045 routed", null],
+            ["12:04", "OB-2043 delivered", null],
+            ["12:46", "OB-2044 dispatched", null],
+          ].map(([t, ev, mark], i) => (
+            <div key={i} className="mk-shot__auditRow">
+              <span className="mk-mono mk-dim">{t}</span>
+              <span className="mk-shot__auditDot" style={{ background: mark === "Tone" ? tone : ink, opacity: mark === "Tone" ? 1 : 0.35 }} />
+              <span>{ev}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    ),
+    4: ([bg, surf, ink, tone]) => (
+      <div className="mk-shot mk-shot--phonewrap">
+        <div className="mk-shot__phone" style={{ background: bg, color: ink, borderColor: "color-mix(in oklab, currentColor 22%, transparent)" }}>
+          <div className="mk-shot__phoneNotch" />
+          <div className="mk-row mk-shot__phoneBar">
+            <span className="mk-mark mk-shot__phoneBrand">◆</span>
+            <span className="mk-mono mk-dim">Inbox</span>
+            <span className="mk-mono mk-dim">5</span>
+          </div>
+          <div className="mk-shot__phoneList">
+            {[
+              ["OB-2041", "Mercer & Co.", "Packing", true],
+              ["OB-2042", "Brackish", "Routed", false],
+              ["OB-2043", "Verre", "Quoted", false],
+              ["OB-2044", "Linnea", "Held", true],
+              ["OB-2045", "Northmark", "Routed", false],
+            ].map(([id, who, st, hot]) => (
+              <div key={id} className="mk-shot__phoneObsRow">
+                <div>
+                  <div className="mk-mono mk-dim mk-shot__phoneObsId">{id}</div>
+                  <div>{who}</div>
+                </div>
+                <span className="mk-mono mk-shot__pill" style={{ color: hot ? tone : ink, borderColor: hot ? tone : "color-mix(in oklab, currentColor 30%, transparent)" }}>{st}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    ),
+  },
+
+  linnea: {
+    1: ([bg, surf, ink, tone]) => (
+      <div className="mk-shot mk-shot--col" style={{ color: ink, background: `radial-gradient(120% 80% at 50% 0%, ${surf} 0%, ${bg} 70%)`, padding: "3cqw", alignItems: "center" }}>
+        <span className="mk-mono mk-dim">— Label · 01</span>
+        <div className="mk-shot__linneaBottle" style={{ background: tone, borderColor: ink }}>
+          <span className="mk-mono mk-shot__linneaLbl" style={{ color: bg }}>No. 01</span>
+          <span className="mk-mark mk-shot__linneaName" style={{ color: bg }}>Linnea</span>
+          <span className="mk-mono mk-shot__linneaSub" style={{ color: bg }}>Botanical serum<br />30 ml · 1 fl oz</span>
+          <div className="mk-shot__linneaRule" style={{ background: bg }} />
+          <span className="mk-mono mk-shot__linneaIng" style={{ color: bg }}>Rosehip · Calendula · Squalane</span>
+        </div>
+        <span className="mk-mono mk-dim">Lisboa · cold-pressed</span>
+      </div>
+    ),
+    2: ([bg, surf, ink, tone]) => (
+      <div className="mk-shot mk-shot--col" style={{ color: ink, padding: "3.6cqw", alignItems: "center" }}>
+        <span className="mk-mark mk-shot__bigh" style={{ fontSize: "12cqw", letterSpacing: "-0.02em", marginTop: "auto" }}>Linnea</span>
+        <span className="mk-mono mk-dim" style={{ letterSpacing: "0.4cqw" }}>APOTHECARY</span>
+        <div className="mk-shot__linneaMark" style={{ background: tone }}>
+          <span className="mk-mark" style={{ color: bg, fontSize: "10cqw" }}>L</span>
+        </div>
+        <div className="mk-shot__rows" style={{ width: "100%", marginTop: "auto" }}>
+          {[["Wordmark", "Fraunces Italic"], ["Color", "Bone · Tone"], ["Origin", "Lisboa · 2018"]].map(([k, v]) => (
+            <div key={k} className="mk-shot__row">
+              <span className="mk-shot__lbl">{k}</span>
+              <span className="mk-mark mk-shot__rowv">{v}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    ),
+    3: ([bg, surf, ink, tone]) => (
+      <div className="mk-shot mk-shot--col" style={{ color: ink, padding: "3cqw" }}>
+        <span className="mk-shot__lbl">Set · Three formulations</span>
+        <div className="mk-shot__linneaShelf">
+          {[
+            { name: "01 Serum", body: surf, sub: "Day" },
+            { name: "02 Balm", body: tone, sub: "Night" },
+            { name: "03 Mist", body: surf, sub: "Tonic" },
+          ].map((p, i) => (
+            <div key={i} className="mk-shot__linneaSet">
+              <div className="mk-shot__linneaSetBottle" style={{ background: p.body, borderColor: "color-mix(in oklab, currentColor 25%, transparent)" }}>
+                <span className="mk-mark" style={{ color: p.body === tone ? bg : ink, fontSize: "5cqw" }}>L</span>
+              </div>
+              <span className="mk-mark mk-shot__linneaSetName">{p.name}</span>
+              <span className="mk-mono mk-dim">{p.sub}</span>
+            </div>
+          ))}
+        </div>
+        <div className="mk-shot__rows" style={{ marginTop: "1.4cqw" }}>
+          {[["Set price", "€84"], ["Volume", "3 × 30 ml"]].map(([k, v]) => (
+            <div key={k} className="mk-shot__row"><span className="mk-shot__lbl">{k}</span><span className="mk-mark mk-shot__rowv">{v}</span></div>
+          ))}
+        </div>
+      </div>
+    ),
+    4: ([bg, surf, ink, tone]) => (
+      <div className="mk-shot mk-shot--cols2" style={{ color: ink, gap: "2cqw" }}>
+        <div className="mk-shot__panel" style={{ background: surf, padding: "2.6cqw" }}>
+          <span className="mk-shot__lbl">Business card · front</span>
+          <div className="mk-shot__card" style={{ background: bg, borderColor: "color-mix(in oklab, currentColor 14%, transparent)", flex: 1 }}>
+            <span className="mk-mark mk-shot__cardName">Linnea</span>
+            <span className="mk-mono mk-dim">Apothecary · est. 2018</span>
+          </div>
+        </div>
+        <div className="mk-shot__panel" style={{ background: surf, padding: "2.6cqw" }}>
+          <span className="mk-shot__lbl">Card · back</span>
+          <div className="mk-shot__card" style={{ background: tone, color: bg, flex: 1 }}>
+            <div className="mk-shot__cardMeta"><span>hello@linnea.pt</span><span>+351 21 123 45</span><span>Rua dos Anjos · Lisboa</span></div>
+            <span className="mk-mark" style={{ fontSize: "8cqw", alignSelf: "end" }}>L</span>
+          </div>
+        </div>
+      </div>
+    ),
+  },
+
+  "field-notes": {
+    1: ([bg, surf, ink, tone]) => (
+      <div className="mk-shot mk-shot--col" style={{ color: ink, padding: "3cqw" }}>
+        <div className="mk-shot__zinePage" style={{ background: surf }}>
+          <div className="mk-row mk-mono mk-dim">
+            <span>FIELD NOTES — IV</span>
+            <span>p. 12</span>
+          </div>
+          <h3 className="mk-shot__zineH"><em style={{ fontStyle: "italic", color: tone }}>On</em><br />slow looking.</h3>
+          <span className="mk-mono mk-dim">An essay by Mercer · plate by N. Falk</span>
+          <div className="mk-shot__zineFlow">
+            <div className="mk-shot__zineCol">
+              {Array.from({ length: 9 }).map((_, i) => (
+                <span key={i} className="mk-shot__line" style={{ background: ink, width: `${72 + (i * 7) % 26}%` }} />
+              ))}
+            </div>
+            <div className="mk-shot__zineCol">
+              {Array.from({ length: 9 }).map((_, i) => (
+                <span key={i} className="mk-shot__line" style={{ background: ink, width: `${68 + (i * 11) % 30}%` }} />
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    ),
+    2: ([bg, surf, ink, tone]) => (
+      <div className="mk-shot mk-shot--cover" style={{ color: ink, background: surf }}>
+        <div className="mk-shot__coverHd">
+          <span className="mk-mark mk-shot__coverBrand">Field Notes</span>
+          <span className="mk-mono mk-dim">№ 04</span>
+        </div>
+        <div className="mk-shot__coverBody">
+          <span className="mk-mark" style={{ fontSize: "26cqw", color: tone, lineHeight: 0.85 }}>04</span>
+          <span className="mk-mono mk-dim">Spring · Plate I — Riverbed</span>
+        </div>
+        <div className="mk-shot__coverFt mk-mono mk-dim">
+          <span>A quarterly</span>
+          <span>€12</span>
+        </div>
+      </div>
+    ),
+    3: ([bg, surf, ink, tone]) => (
+      <div className="mk-shot mk-shot--col" style={{ color: ink, padding: "3cqw" }}>
+        <span className="mk-shot__lbl">Drop cap · specimen</span>
+        <div className="mk-shot__dropcap">
+          <span className="mk-mark mk-shot__dropcapLetter" style={{ color: tone }}>O</span>
+          <div className="mk-shot__lines mk-shot__dropcapLines">
+            {Array.from({ length: 9 }).map((_, i) => (
+              <span key={i} className="mk-shot__line" style={{ background: ink, width: `${64 + (i * 9) % 32}%` }} />
+            ))}
+          </div>
+        </div>
+        <div className="mk-shot__rows" style={{ marginTop: "auto" }}>
+          {[["Body", "EB Garamond / 11"], ["Caption", "Geist Mono / 9"], ["Lead", "EB Garamond Italic"]].map(([k, v]) => (
+            <div key={k} className="mk-shot__row"><span className="mk-shot__lbl">{k}</span><span className="mk-mark mk-shot__rowv">{v}</span></div>
+          ))}
+        </div>
+      </div>
+    ),
+    4: ([bg, surf, ink, tone]) => (
+      <div className="mk-shot mk-shot--col" style={{ color: ink, padding: "3cqw" }}>
+        <span className="mk-shot__lbl">Back issues · 2022 — 2024</span>
+        <div className="mk-shot__issueGrid">
+          {[
+            ["01", "Origins", surf],
+            ["02", "Field", surf],
+            ["03", "Studio", tone],
+            ["04", "Slow", surf],
+            ["05", "Quiet", surf],
+            ["06", "Edge", surf],
+          ].map(([n, name, body]) => (
+            <div key={n} className="mk-shot__issue" style={{ background: body, color: body === tone ? bg : ink }}>
+              <span className="mk-mono mk-dim">№ {n}</span>
+              <span className="mk-mark mk-shot__issueName">{name}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    ),
+  },
+
+  atlas: {
+    1: ([bg, surf, ink, tone]) => (
+      <div className="mk-shot mk-shot--col" style={{ color: ink, padding: "3cqw" }}>
+        <div className="mk-row" style={{ paddingBottom: "1.4cqw", borderBottom: "1px solid color-mix(in oklab, currentColor 12%, transparent)" }}>
+          <span className="mk-shot__lbl">Route · MX-902 · live</span>
+          <span className="mk-mono" style={{ color: tone }}>+8m</span>
+        </div>
+        <div className="mk-shot__route" style={{ background: surf }}>
+          <svg viewBox="0 0 200 70" preserveAspectRatio="none" className="mk-arch__svg">
+            <path d="M10,55 Q60,15 120,40 T190,20" stroke={tone} strokeWidth="1.4" fill="none" strokeDasharray="3 2" />
+            {[[10, 55], [60, 30], [120, 40], [190, 20]].map(([x, y], i) => (
+              <g key={i}>
+                <circle cx={x} cy={y} r="3" fill={tone} />
+                <circle cx={x} cy={y} r="8" fill="none" stroke={tone} strokeOpacity="0.35" />
+              </g>
+            ))}
+          </svg>
+        </div>
+        <div className="mk-shot__rows">
+          {[
+            ["Lisboa · 06:14", "Departed"],
+            ["Setúbal · 07:42", "Stopped 12m"],
+            ["Évora · 09:05", "In transit"],
+            ["Faro · 11:30 ETA", "—"],
+          ].map(([k, v]) => (
+            <div key={k} className="mk-shot__row">
+              <span><span className="mk-mark" style={{ fontSize: "2.4cqw" }}>{k.split("·")[0]}</span><span className="mk-mono mk-dim"> · {k.split("·")[1]}</span></span>
+              <span className="mk-mono mk-dim">{v}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    ),
+    2: ([bg, surf, ink, tone]) => (
+      <div className="mk-shot mk-shot--col" style={{ color: ink, padding: "3cqw" }}>
+        <div className="mk-row" style={{ paddingBottom: "1.4cqw", borderBottom: "1px solid color-mix(in oklab, currentColor 12%, transparent)" }}>
+          <span className="mk-shot__lbl">Shipment · MX-902</span>
+          <span className="mk-mono mk-shot__pill" style={{ color: tone, borderColor: tone }}>Delay 12m</span>
+        </div>
+        <h3 className="mk-shot__bigh" style={{ fontSize: "5.4cqw" }}>Setúbal<br />→ Évora</h3>
+        <span className="mk-mono mk-dim">Carrier · Mercer Freight</span>
+        <div className="mk-shot__rows">
+          {[["Container", "C-44128"], ["Weight", "8.4 t"], ["Items", "1,204"], ["Driver", "P. Almeida"], ["Last ping", "2m ago"]].map(([k, v]) => (
+            <div key={k} className="mk-shot__row"><span className="mk-shot__lbl">{k}</span><span className="mk-mark mk-shot__rowv">{v}</span></div>
+          ))}
+        </div>
+        <div className="mk-shot__progress" style={{ background: "color-mix(in oklab, currentColor 10%, transparent)" }}>
+          <span style={{ background: tone, width: "62%" }} />
+        </div>
+      </div>
+    ),
+    3: ([bg, surf, ink, tone]) => (
+      <div className="mk-shot mk-shot--col" style={{ color: ink, padding: "3cqw" }}>
+        <span className="mk-shot__lbl">Network · last 7 days</span>
+        <h3 className="mk-shot__bigh" style={{ color: tone }}>98.4%</h3>
+        <span className="mk-mono mk-dim">on-time delivery</span>
+        <div className="mk-shot__chartbars">
+          {Array.from({ length: 28 }).map((_, i) => (
+            <div key={i} style={{ height: `${50 + ((i * 13) % 48)}%`, background: (i + 1) % 7 === 0 ? tone : ink, opacity: (i + 1) % 7 === 0 ? 1 : 0.35 }} />
+          ))}
+        </div>
+        <div className="mk-shot__rows">
+          {[["Total moves", "1,284"], ["Avg dwell", "14 min"], ["Fleet utilisation", "78%"], ["Incidents", "2"]].map(([k, v]) => (
+            <div key={k} className="mk-shot__row"><span className="mk-shot__lbl">{k}</span><span className="mk-mark mk-shot__rowv">{v}</span></div>
+          ))}
+        </div>
+      </div>
+    ),
+    4: ([bg, surf, ink, tone]) => (
+      <div className="mk-shot mk-shot--phonewrap">
+        <div className="mk-shot__phone" style={{ background: bg, color: ink, borderColor: "color-mix(in oklab, currentColor 22%, transparent)" }}>
+          <div className="mk-shot__phoneNotch" />
+          <div className="mk-row mk-shot__phoneBar">
+            <span className="mk-mark mk-shot__phoneBrand">Atlas</span>
+            <span className="mk-mono mk-dim">1,284</span>
+          </div>
+          <div style={{ padding: "1.6cqw 2.4cqw" }}>
+            <div className="mk-shot__phoneMapMini" style={{ background: surf }}>
+              <svg viewBox="0 0 100 60" preserveAspectRatio="none" style={{ width: "100%", height: "100%" }}>
+                <path d="M5,50 Q30,20 60,30 T95,15" stroke={tone} strokeWidth="1.2" strokeDasharray="2 1.5" fill="none" />
+                {[[5, 50], [30, 30], [60, 30], [95, 15]].map(([x, y], i) => (
+                  <circle key={i} cx={x} cy={y} r="2" fill={tone} />
+                ))}
+              </svg>
+            </div>
+          </div>
+          <div style={{ padding: "0 2.4cqw" }}>
+            {[
+              ["MX-902", "Lisboa → Évora", true],
+              ["MX-903", "Faro → Madrid", false],
+              ["MX-904", "Porto → Vigo", false],
+            ].map(([id, leg, hot]) => (
+              <div key={id} style={{ padding: "1.2cqw 0", borderBottom: "1px solid color-mix(in oklab, currentColor 8%, transparent)" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", fontSize: "1.8cqw" }}>
+                  <span className="mk-mono">{id}</span>
+                  <span className="mk-mono" style={{ color: hot ? tone : ink, opacity: hot ? 1 : 0.55 }}>{hot ? "Delay" : "On time"}</span>
+                </div>
+                <span className="mk-mono mk-dim" style={{ fontSize: "1.6cqw" }}>{leg}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    ),
+  },
+
+  "north-mark": {
+    1: ([bg, surf, ink, tone]) => (
+      <div className="mk-shot mk-shot--col" style={{ color: ink, padding: "3cqw" }}>
+        <div className="mk-row" style={{ paddingBottom: "1.4cqw", borderBottom: "1px solid color-mix(in oklab, currentColor 12%, transparent)" }}>
+          <span className="mk-shot__lbl">Portfolio · Vol. IX</span>
+          <span className="mk-mono mk-dim">27 companies</span>
+        </div>
+        <div className="mk-shot__firmGrid">
+          {["Mercer", "Vantage", "Atlas", "Halen", "Verre", "Brackish", "Linnea", "Marrow", "Field", "Obsidian", "Kindred", "Pavilion"].map((n, i) => (
+            <div key={n} className="mk-shot__firmCard" style={{ background: surf }}>
+              <span className="mk-mark mk-shot__firmName">{n}</span>
+              <span className="mk-mono mk-dim">{["Seed", "A", "B", "Seed", "B", "A", "Seed", "A", "Seed", "B", "Seed", "A"][i]} · 20{(20 + (i % 5))}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    ),
+    2: ([bg, surf, ink, tone]) => (
+      <div className="mk-shot mk-shot--cover" style={{ color: ink }}>
+        <div className="mk-shot__coverHd">
+          <span className="mk-mark mk-shot__coverBrand">Northmark</span>
+          <span className="mk-mono mk-dim">2026</span>
+        </div>
+        <div className="mk-shot__coverBody">
+          <span className="mk-mono mk-dim">— Annual letter · Vol. IX</span>
+          <h3 className="mk-shot__coverTitle">
+            On the<br /><em style={{ fontStyle: "italic", color: tone }}>long</em><br />time.
+          </h3>
+          <span className="mk-mono mk-dim">Sixty-eight pages · partners' note</span>
+        </div>
+        <div className="mk-shot__coverFt mk-mono mk-dim">
+          <span>For investors only</span>
+          <span>NM · IX</span>
+        </div>
+      </div>
+    ),
+    3: ([bg, surf, ink, tone]) => (
+      <div className="mk-shot mk-shot--col" style={{ color: ink, padding: "3cqw" }}>
+        <span className="mk-shot__lbl">By the numbers · 2026</span>
+        <div className="mk-shot__statsGrid">
+          {[["$1.4B", "AUM"], ["27", "Portfolio"], ["9", "Exits"], ["3.2×", "Median return"]].map(([n, l], i) => (
+            <div key={i} className="mk-shot__bigFact">
+              <span className="mk-mark mk-shot__bigFactN" style={{ color: i === 0 || i === 3 ? tone : ink }}>{n}</span>
+              <span className="mk-shot__lbl">{l}</span>
+            </div>
+          ))}
+        </div>
+        <div className="mk-shot__rows" style={{ marginTop: "auto" }}>
+          {[["Founded", "2011"], ["Offices", "Lisbon · NYC"], ["Cheque size", "$1 — 20M"], ["Stages", "Seed → C"]].map(([k, v]) => (
+            <div key={k} className="mk-shot__row"><span className="mk-shot__lbl">{k}</span><span className="mk-mark mk-shot__rowv">{v}</span></div>
+          ))}
+        </div>
+      </div>
+    ),
+    4: ([bg, surf, ink, tone]) => (
+      <div className="mk-shot mk-shot--phonewrap">
+        <div className="mk-shot__phone" style={{ background: bg, color: ink, borderColor: "color-mix(in oklab, currentColor 22%, transparent)" }}>
+          <div className="mk-shot__phoneNotch" />
+          <div className="mk-row mk-shot__phoneBar">
+            <span className="mk-mark mk-shot__phoneBrand">Northmark</span>
+            <span className="mk-mono mk-dim">≡</span>
+          </div>
+          <div style={{ padding: "3cqw 2.4cqw 2cqw" }}>
+            <span className="mk-mono mk-dim" style={{ fontSize: "1.6cqw" }}>— Vol. IX</span>
+            <h4 className="mk-mark" style={{ fontSize: "6.4cqw", lineHeight: 0.96, margin: "1cqw 0" }}>
+              We back<br /><em style={{ fontStyle: "italic", color: tone }}>quiet</em><br />companies.
+            </h4>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: "0.8cqw", marginTop: "2cqw" }}>
+              {["AUM $1.4B", "27 portfolio", "9 exits"].map((t) => (
+                <span key={t} className="mk-mono" style={{ padding: "0.6cqw 1.2cqw", border: "1px solid color-mix(in oklab, currentColor 18%, transparent)", borderRadius: "99cqw", fontSize: "1.5cqw" }}>{t}</span>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    ),
+  },
+
+  kindred: {
+    1: ([bg, surf, ink, tone]) => (
+      <div className="mk-shot" style={{ padding: 0 }}>
+        <div className="mk-shot__posterWide" style={{ background: tone, color: bg }}>
+          <div className="mk-row" style={{ padding: "3cqw 4cqw" }}>
+            <span className="mk-mono">№ 01</span>
+            <span className="mk-mono">Kindred · Tapada · 2026</span>
+          </div>
+          <div className="mk-shot__posterWideBody">
+            <span className="mk-mark mk-shot__posterWideH">Kindred</span>
+            <span className="mk-mark mk-shot__posterWideSub" style={{ color: ink }}><em style={{ fontStyle: "italic" }}>Vol. I</em></span>
+          </div>
+          <div className="mk-row mk-mono" style={{ padding: "3cqw 4cqw", borderTop: "1px solid color-mix(in oklab, currentColor 25%, transparent)" }}>
+            <span>27 → 29 Jun</span>
+            <span>40 acts · 3 stages</span>
+            <span>Lisboa, PT</span>
+          </div>
+        </div>
+      </div>
+    ),
+    2: ([bg, surf, ink, tone]) => (
+      <div className="mk-shot" style={{ padding: "3cqw", display: "flex", justifyContent: "center" }}>
+        <div className="mk-shot__posterTall" style={{ background: ink, color: bg }}>
+          <div className="mk-row mk-mono" style={{ padding: "2cqw 3cqw" }}>
+            <span style={{ color: tone }}>№ 02</span>
+            <span>K · F · 26</span>
+          </div>
+          <div className="mk-shot__posterTallBody">
+            <span className="mk-mark mk-shot__posterTallH" style={{ color: tone }}>Kin<br />dred</span>
+          </div>
+          <div className="mk-shot__posterTallFt">
+            <div className="mk-row mk-mono" style={{ borderTop: "1px solid color-mix(in oklab, currentColor 25%, transparent)", padding: "1.6cqw 0" }}>
+              <span>Vol. II</span>
+              <span>Night sets</span>
+            </div>
+            <div className="mk-mono mk-shot__posterTallActs">
+              {["Nala R.", "Verre", "P. Mercer", "Brackish", "Linnea", "+ 22"].map((a) => (<span key={a}>{a}</span>))}
+            </div>
+          </div>
+        </div>
+      </div>
+    ),
+    3: ([bg, surf, ink, tone]) => (
+      <div className="mk-shot mk-shot--col" style={{ color: ink, padding: "3cqw" }}>
+        <span className="mk-shot__lbl">Type · Display set</span>
+        <div className="mk-shot__specBig">
+          <span className="mk-mark" style={{ fontSize: "44cqw", lineHeight: 0.82, color: tone }}>K</span>
+        </div>
+        <div className="mk-shot__rows">
+          {[["72 / Poster", "Kindred"], ["48 / Banner", "Kindred"], ["28 / Body", "Kindred"], ["12 / Caption", "Kindred"]].map(([k, v]) => (
+            <div key={k} className="mk-shot__row"><span className="mk-shot__lbl">{k}</span><span className="mk-mark mk-shot__rowv">{v}</span></div>
+          ))}
+        </div>
+      </div>
+    ),
+    4: ([bg, surf, ink, tone]) => (
+      <div className="mk-shot" style={{ padding: "3cqw" }}>
+        <div className="mk-shot__pasteup" style={{ background: surf }}>
+          {[
+            { t: "Kindred", n: "01", body: tone, ink: bg, r: -2 },
+            { t: "Kindred", n: "02", body: ink, ink: bg, r: 1 },
+            { t: "Kindred", n: "03", body: surf, ink: ink, r: -1 },
+            { t: "Kindred", n: "04", body: tone, ink: bg, r: 2 },
+            { t: "Kindred", n: "05", body: bg, ink: ink, r: -1.5 },
+            { t: "Kindred", n: "06", body: surf, ink: tone, r: 1.5 },
+          ].map((p, i) => (
+            <div key={i} className="mk-shot__pasteupP" style={{ background: p.body, color: p.ink, transform: `rotate(${p.r}deg)`, gridColumn: `span ${i % 4 === 0 ? 2 : 1}` }}>
+              <span className="mk-mono mk-shot__pasteupN">№ {p.n}</span>
+              <span className="mk-mark mk-shot__pasteupT">{p.t}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    ),
+  },
+};
+
+function Mockup({ project, ratio = "4 / 3", idx = 0 }) {
+  if (idx === 0) {
+    const render = MOCKUPS[project.id];
+    if (!render) return <Placeholder project={project} idx={0} ratio={ratio} />;
+    return (
+      <div className={`mk mk--${project.id}`} style={{ aspectRatio: ratio, background: project.palette[0] }}>
+        {render(project.palette)}
+      </div>
+    );
+  }
+  const render = SHOTS[project.id]?.[idx];
+  if (!render) return <Placeholder project={project} idx={idx} ratio={ratio} />;
   return (
-    <div className={`mk mk--${project.id}`} style={{ aspectRatio: ratio, background: project.palette[0] }}>
+    <div className={`mk mk--${project.id} mk--shot${idx}`} style={{ aspectRatio: ratio, background: project.palette[0] }}>
       {render(project.palette)}
     </div>
   );
@@ -955,18 +1763,18 @@ function CaseStudy({ project, onClose, onNav }) {
             <p>Every project begins with subtraction. We mapped the core decisions a user makes in a session and built outward from there — instead of starting with the chrome and decorating inward.</p>
           </div>
           <div className="cs__rowimg">
-            <Placeholder project={project} idx={1} ratio="4 / 3" />
+            <Mockup project={project} idx={1} ratio="4 / 3" />
           </div>
         </section>
 
         <section className="cs__doubles">
-          <Placeholder project={project} idx={2} ratio="4 / 5" />
-          <Placeholder project={project} idx={3} ratio="4 / 5" dense />
+          <Mockup project={project} idx={2} ratio="4 / 5" />
+          <Mockup project={project} idx={3} ratio="4 / 5" />
         </section>
 
         <section className="cs__row cs__row--rev">
           <div className="cs__rowimg">
-            <Placeholder project={project} idx={4} ratio="4 / 3" dense={project.cat === "Dashboards"} />
+            <Mockup project={project} idx={4} ratio="4 / 3" />
           </div>
           <div className="cs__rowtxt">
             <span className="mono dim">02 — System</span>
@@ -1012,7 +1820,10 @@ function TweaksLauncher() {
     const onMsg = (e) => {
       const t = e?.data?.type;
       if (t === "__activate_edit_mode") setVisible(false);
-      else if (t === "__deactivate_edit_mode") setVisible(true);
+      // __deactivate_edit_mode only fires when the design-tool host echoes it.
+      // The panel's own X button posts __edit_mode_dismissed instead, so we
+      // listen for both to make sure the launcher returns when the panel closes.
+      else if (t === "__deactivate_edit_mode" || t === "__edit_mode_dismissed") setVisible(true);
     };
     window.addEventListener("message", onMsg);
     return () => window.removeEventListener("message", onMsg);
