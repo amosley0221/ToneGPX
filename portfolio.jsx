@@ -212,18 +212,22 @@ function ScrollRail({ targetRef, page, totalPages }) {
   useEffect(() => {
     const el = targetRef?.current || document.scrollingElement;
     if (!el) return;
-    const onScroll = () => {
+    let raf = 0;
+    const measure = () => {
+      raf = 0;
       const max = el.scrollHeight - el.clientHeight;
       const p = max > 0 ? el.scrollTop / max : 0;
       setProgress(p);
       setPct(String(Math.round(p * 100)).padStart(2, "0"));
     };
-    onScroll();
-    el.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
+    const schedule = () => { if (!raf) raf = requestAnimationFrame(measure); };
+    measure();
+    el.addEventListener("scroll", schedule, { passive: true });
+    window.addEventListener("resize", schedule);
     return () => {
-      el.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
+      if (raf) cancelAnimationFrame(raf);
+      el.removeEventListener("scroll", schedule);
+      window.removeEventListener("resize", schedule);
     };
   }, [targetRef, page]);
 
