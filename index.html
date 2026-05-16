@@ -346,8 +346,10 @@
 
   .card{ display: flex; flex-direction: column; gap: 18px; }
   .card__media{ position: relative; overflow: hidden; border-radius: 4px; }
-  .card__media .ph{ transition: transform 1200ms cubic-bezier(.2,.7,.2,1); }
-  .card:hover .card__media .ph{ transform: scale(1.04); }
+  .card__media .ph,
+  .card__media .mk{ transition: transform 1200ms cubic-bezier(.2,.7,.2,1); }
+  .card:hover .card__media .ph,
+  .card:hover .card__media .mk{ transform: scale(1.04); }
 
   .card__meta{ display: flex; flex-direction: column; gap: 10px; }
   .card__title-row{ display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
@@ -367,6 +369,135 @@
   }
   .ph-grid{ position: absolute; bottom: 22px; left: 22px; right: 22px; height: 40%; display: grid; grid-template-columns: repeat(8, 1fr); align-items: end; gap: 4px; }
   .ph-bar{ width: 100%; border-radius: 1px; }
+
+  /* ─── Project mockups ────────────────────────────────────────────────── */
+  .mk{ position: relative; width: 100%; overflow: hidden; container-type: inline-size;
+       font-family: var(--font-ui); border-radius: 2px; }
+  .mk-mark{ font-family: var(--font-display); letter-spacing: -0.02em; line-height: 1; font-weight: 400; }
+  .mk-mono{ font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.08em; font-size: 1.7cqw; }
+  .mk-dim{ opacity: 0.55; }
+  .mk-row{ display: flex; align-items: center; justify-content: space-between; gap: 2cqw; }
+  .mk-grow{ flex: 1; min-height: 0; width: 100%; }
+  .mk-pnl{ padding: 1.8cqw; border-radius: 0.6cqw; display: flex; flex-direction: column; gap: 1.2cqw; }
+
+  /* Vantage — financial dashboard */
+  .mk-dash{ position: absolute; inset: 0; padding: 3cqw; display: grid;
+            grid-template-rows: auto 1fr auto; gap: 2.4cqw; }
+  .mk-dash__bar{ padding-bottom: 1.6cqw; border-bottom: 1px solid; }
+  .mk-dash__grid{ display: grid; grid-template-columns: 1.55fr 1fr; gap: 2cqw; min-height: 0; }
+  .mk-dash__chart{ min-height: 0; }
+  .mk-dash__stats{ display: grid; grid-template-columns: 1fr 1fr; gap: 1.4cqw; }
+  .mk-dash__stat{ justify-content: space-between; padding: 1.6cqw; gap: 0.6cqw; }
+  .mk-dash__statv{ font-size: 4.2cqw; display: inline-flex; align-items: baseline; }
+  .mk-dash__unit{ font-size: 1.5cqw; margin-left: 0.5cqw; opacity: 0.65; }
+  .mk-dash__rows{ display: flex; flex-direction: column; }
+  .mk-dash__row{ display: grid; grid-template-columns: 7cqw 1fr 7cqw;
+                 align-items: center; gap: 2cqw; padding: 0.9cqw 0;
+                 border-bottom: 1px solid; }
+  .mk-dash__row:last-child{ border-bottom: 0; }
+  .mk-dash__spark{ height: 3.6cqw; width: 100%; }
+
+  /* Marrow — editorial publication */
+  .mk-mag{ position: absolute; inset: 0; padding: 3cqw 4cqw;
+           display: grid; grid-template-rows: auto auto 1fr; gap: 3cqw; }
+  .mk-mag__bar{ padding-bottom: 1.6cqw; border-bottom: 1px solid color-mix(in oklab, currentColor 14%, transparent); }
+  .mk-mag__bar > .mk-row{ opacity: 0.85; }
+  .mk-mag__brand{ font-size: 3.4cqw; font-style: italic; }
+  .mk-mag__hd{ display: flex; flex-direction: column; gap: 1.6cqw; }
+  .mk-mag__h{ font-size: 9cqw; line-height: 0.95; margin: 0; font-weight: 400; }
+  .mk-mag__cols{ display: grid; grid-template-columns: repeat(3, 1fr); gap: 3cqw; align-content: end; }
+  .mk-mag__col{ display: flex; flex-direction: column; gap: 0.7cqw; }
+  .mk-mag__line{ height: 0.7cqw; opacity: 0.45; border-radius: 0.2cqw; }
+
+  /* Halen — architecture studio */
+  .mk-arch{ position: absolute; inset: 0; padding: 3cqw 3.5cqw;
+            display: grid; grid-template-rows: auto 1fr auto; gap: 2cqw; }
+  .mk-arch__bar{ }
+  .mk-arch__brand{ font-size: 3cqw; letter-spacing: 0.4cqw; font-family: var(--font-display); }
+  .mk-arch__stage{ min-height: 0; display: flex; align-items: end; justify-content: center; }
+  .mk-arch__svg{ width: 100%; height: 100%; }
+  .mk-arch__cap{ padding-top: 1.4cqw; border-top: 1px solid color-mix(in oklab, currentColor 14%, transparent); }
+
+  /* Obsidian OS — operations console */
+  .mk-ops{ position: absolute; inset: 0; display: grid; grid-template-columns: 18cqw 1fr; gap: 0; }
+  .mk-ops__side{ padding: 2.2cqw 1.6cqw; display: flex; flex-direction: column; gap: 1cqw; }
+  .mk-ops__brand{ font-size: 4cqw; padding: 0.4cqw 0 1.6cqw; }
+  .mk-ops__nav{ justify-content: flex-start; gap: 1cqw; padding: 0.6cqw 0.4cqw; }
+  .mk-ops__dot{ width: 0.9cqw; height: 0.9cqw; border-radius: 50%; }
+  .mk-ops__main{ padding: 2.4cqw 3cqw; display: flex; flex-direction: column; gap: 1.8cqw; min-width: 0; }
+  .mk-ops__title{ font-size: 3.4cqw; }
+  .mk-ops__table{ display: flex; flex-direction: column; border-top: 1px solid; }
+  .mk-ops__hdr, .mk-ops__row{ display: grid; grid-template-columns: 1.1fr 1.4fr 1fr 0.7fr;
+                              gap: 1cqw; padding: 1.2cqw 0; align-items: center; font-size: 1.9cqw; }
+  .mk-ops__hdr{ padding: 0.8cqw 0; }
+  .mk-ops__row{ border-bottom: 1px solid; }
+  .mk-ops__row:last-child{ border-bottom: 0; }
+  .mk-ops__pill{ display: inline-block; padding: 0.3cqw 0.9cqw; border: 1px solid; border-radius: 99cqw;
+                 font-family: var(--font-mono); font-size: 1.4cqw; text-transform: uppercase; letter-spacing: 0.08em; width: max-content; }
+
+  /* Linnea — skincare identity */
+  .mk-brand{ position: absolute; inset: 0; padding: 4cqw 4cqw 3cqw;
+             display: grid; grid-template-rows: auto 1fr auto; gap: 2cqw; align-items: center; justify-items: center; text-align: center; }
+  .mk-brand__eyebrow{ }
+  .mk-brand__shelf{ display: flex; gap: 2.6cqw; align-items: end; height: 100%; padding-top: 1cqw; }
+  .mk-brand__bottle{ display: flex; flex-direction: column; align-items: center; height: 100%; justify-content: end; }
+  .mk-brand__neck{ width: 4cqw; height: 4cqw; border: 1px solid; border-bottom: 0; border-radius: 0.4cqw 0.4cqw 0 0; }
+  .mk-brand__body{ width: 13cqw; flex: 1; max-height: 26cqw; border: 1px solid; border-radius: 0.6cqw;
+                   display: flex; flex-direction: column; justify-content: space-between; padding: 1.4cqw 1cqw; }
+  .mk-brand__lbl{ font-size: 1.3cqw; }
+  .mk-brand__num{ font-size: 6cqw; align-self: center; }
+  .mk-brand__sig{ display: flex; flex-direction: column; gap: 0.6cqw; align-items: center; }
+  .mk-brand__mark{ font-size: 7cqw; margin: 0; font-weight: 400; letter-spacing: -0.01em; }
+
+  /* Field Notes — print zine */
+  .mk-zine{ position: absolute; inset: 0; padding: 2.4cqw; display: grid; grid-template-rows: 1fr auto; gap: 1.4cqw; }
+  .mk-zine__spread{ display: grid; grid-template-columns: 1fr 0.3cqw 1fr; min-height: 0; border-radius: 0.4cqw; overflow: hidden; }
+  .mk-zine__page{ padding: 2.6cqw 2.2cqw; display: flex; flex-direction: column; gap: 1.4cqw; min-width: 0; }
+  .mk-zine__fold{ }
+  .mk-zine__h{ font-size: 5.4cqw; line-height: 0.95; margin: 0; font-weight: 400; }
+  .mk-zine__lines{ display: flex; flex-direction: column; gap: 0.6cqw; margin-top: auto; }
+  .mk-zine__line{ height: 0.6cqw; opacity: 0.4; border-radius: 0.2cqw; }
+  .mk-zine__photo{ aspect-ratio: 4 / 3; border: 1px solid; border-radius: 0.4cqw;
+                   display: flex; align-items: center; justify-content: center; }
+  .mk-zine__photo-n{ font-size: 9cqw; opacity: 0.85; }
+  .mk-zine__cols{ display: grid; grid-template-columns: 1fr 1fr; gap: 1.4cqw; }
+  .mk-zine__col{ display: flex; flex-direction: column; gap: 0.5cqw; }
+  .mk-zine__cap{ padding: 0 0.6cqw; }
+
+  /* Atlas — logistics control room */
+  .mk-map{ position: absolute; inset: 0; display: grid; grid-template-columns: 1fr 26cqw; gap: 0; }
+  .mk-map__view{ position: relative; overflow: hidden; }
+  .mk-map__svg{ width: 100%; height: 100%; display: block; }
+  .mk-map__side{ padding: 2cqw 1.8cqw; display: flex; flex-direction: column; gap: 1.4cqw; min-width: 0; }
+  .mk-map__sidehd > span:first-child{ font-size: 2.8cqw; }
+  .mk-map__ship{ padding: 1.4cqw; border-radius: 0.5cqw; display: flex; flex-direction: column; gap: 0.8cqw; border: 1px solid; }
+  .mk-map__leg{ font-size: 1.7cqw; opacity: 0.7; }
+  .mk-map__pill{ padding: 0.3cqw 0.8cqw; border: 1px solid; border-radius: 99cqw;
+                 font-size: 1.3cqw; }
+  .mk-map__bar{ height: 0.7cqw; border-radius: 99cqw; overflow: hidden; position: relative; }
+  .mk-map__bar > span{ display: block; height: 100%; border-radius: inherit; }
+
+  /* Northmark — investment firm site */
+  .mk-firm{ position: absolute; inset: 0; padding: 3cqw 4cqw;
+            display: grid; grid-template-rows: auto 1fr auto; gap: 2cqw; }
+  .mk-firm__bar{ padding-bottom: 1.6cqw; border-bottom: 1px solid color-mix(in oklab, currentColor 14%, transparent); }
+  .mk-firm__brand{ font-size: 3.2cqw; letter-spacing: -0.01em; }
+  .mk-firm__pill{ padding: 0.7cqw 1.4cqw; border: 1px solid; border-radius: 99cqw; }
+  .mk-firm__hero{ display: flex; flex-direction: column; gap: 1.6cqw; justify-content: center; }
+  .mk-firm__h{ font-size: 8.5cqw; line-height: 0.96; margin: 0; font-weight: 400; }
+  .mk-firm__sub{ font-size: 2.6cqw; max-width: 60cqw; font-family: var(--font-display); }
+  .mk-firm__ticker{ display: flex; gap: 1cqw; flex-wrap: wrap; padding-top: 1.4cqw; border-top: 1px solid color-mix(in oklab, currentColor 14%, transparent); }
+  .mk-firm__t{ padding: 0.6cqw 1.2cqw; border: 1px solid; border-radius: 99cqw; }
+
+  /* Kindred — poster series */
+  .mk-poster{ position: absolute; inset: 0; padding: 2.6cqw; display: grid;
+              grid-template-columns: repeat(3, 1fr); gap: 1.6cqw; }
+  .mk-poster__p{ display: flex; flex-direction: column; padding: 1.8cqw 1.6cqw; gap: 1cqw; border-radius: 0.4cqw; overflow: hidden; }
+  .mk-poster__big{ flex: 1; display: flex; flex-direction: column; justify-content: end; gap: 0.6cqw; }
+  .mk-poster__title{ font-size: 5.6cqw; line-height: 0.95; }
+  .mk-poster__sub{ font-size: 1.6cqw; }
+  .mk-poster__rule{ height: 1px; width: 100%; }
+  .mk-poster__feet{ display: flex; justify-content: space-between; font-size: 1.4cqw; opacity: 0.7; }
 
   /* ─── Case study ─────────────────────────────────────────────────────── */
   .cs{ position: fixed; inset: 0; z-index: 100; display: grid; place-items: center; }

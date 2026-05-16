@@ -128,6 +128,344 @@ function Placeholder({ project, idx = 0, label, ratio = "4 / 3", dense = false }
   );
 }
 
+// ─── Project mockups ───────────────────────────────────────────────────────
+const MOCKUPS = {
+  vantage: ([bg, surf, ink, tone]) => (
+    <div className="mk-dash">
+      <div className="mk-row mk-dash__bar" style={{ color: ink, borderColor: surf }}>
+        <div className="mk-row" style={{ gap: "1.6cqw" }}>
+          <span className="mk-mark" style={{ fontSize: "4.4cqw" }}>V</span>
+          <span className="mk-mono mk-dim">Equity desk · Live</span>
+        </div>
+        <span className="mk-mono mk-dim">16:42 UTC</span>
+      </div>
+      <div className="mk-dash__grid">
+        <div className="mk-pnl mk-dash__chart" style={{ background: surf, color: ink }}>
+          <div className="mk-row mk-mono">
+            <span>SPY · 1D</span>
+            <span style={{ color: tone }}>+0.42%</span>
+          </div>
+          <svg viewBox="0 0 200 80" preserveAspectRatio="none" className="mk-grow">
+            <line x1="0" y1="58" x2="200" y2="58" stroke={ink} strokeOpacity="0.12" strokeDasharray="2 3" />
+            {Array.from({ length: 28 }).map((_, i) => {
+              const x = 4 + i * 7;
+              const up = ((i * 7 + 1) % 5) > 2;
+              const y1 = 14 + ((i * 13) % 28);
+              const y2 = y1 + 6 + ((i * 9) % 22);
+              return (
+                <g key={i}>
+                  <line x1={x} y1={y1 - 5} x2={x} y2={y2 + 5} stroke={up ? tone : ink} strokeWidth="0.6" opacity={up ? 0.7 : 0.4} />
+                  <rect x={x - 1.7} y={y1} width="3.4" height={y2 - y1} fill={up ? tone : ink} fillOpacity={up ? 0.9 : 0.55} />
+                </g>
+              );
+            })}
+          </svg>
+        </div>
+        <div className="mk-dash__stats">
+          {[["NAV", "+2.4", "%", 1], ["VOL", "184", "K", 0], ["IV", "12.6", "", 0], ["β", "0.92", "", 0]].map(([k, v, u, hot]) => (
+            <div key={k} className="mk-pnl mk-dash__stat" style={{ background: surf, color: ink }}>
+              <span className="mk-mono mk-dim">{k}</span>
+              <span className="mk-mark mk-dash__statv" style={{ color: hot ? tone : ink }}>
+                {v}<i className="mk-mono mk-dash__unit">{u}</i>
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
+      <div className="mk-dash__rows" style={{ color: ink }}>
+        {["AAPL", "MSFT", "NVDA", "TSLA", "META"].map((t, i) => {
+          const up = i % 2 === 0;
+          const pts = Array.from({ length: 18 }).map((_, j) => `${j * 3.4},${8 + Math.sin((i + 1) * j * 0.55 + 0.4) * 4.5}`).join(" ");
+          return (
+            <div key={t} className="mk-dash__row" style={{ borderColor: surf }}>
+              <span className="mk-mono">{t}</span>
+              <svg viewBox="0 0 60 16" preserveAspectRatio="none" className="mk-dash__spark">
+                <polyline points={pts} stroke={up ? tone : ink} strokeOpacity="0.8" strokeWidth="0.9" fill="none" />
+              </svg>
+              <span className="mk-mono" style={{ color: up ? tone : ink, opacity: up ? 1 : 0.55 }}>
+                {up ? "+" : "−"}{(i * 0.18 + 0.31).toFixed(2)}%
+              </span>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  ),
+
+  marrow: ([bg, surf, ink, tone]) => (
+    <div className="mk-mag" style={{ color: ink }}>
+      <div className="mk-row mk-mag__bar">
+        <span className="mk-mark mk-mag__brand">Marrow</span>
+        <div className="mk-row mk-mono mk-dim" style={{ gap: "2.4cqw" }}>
+          <span>Essays</span><span>Interviews</span><span>Archive</span>
+        </div>
+        <span className="mk-mono mk-dim">Issue 14</span>
+      </div>
+      <div className="mk-mag__hd">
+        <span className="mk-mono mk-dim">— Long read · 12 min</span>
+        <h4 className="mk-mark mk-mag__h" style={{ color: ink }}>
+          On the <em style={{ color: tone, fontStyle: "italic" }}>quiet</em><br />act of editing.
+        </h4>
+        <span className="mk-mono mk-dim">By Camille Mercer · Photography by N. Falk</span>
+      </div>
+      <div className="mk-mag__cols" style={{ color: ink }}>
+        {[0, 1, 2].map((c) => (
+          <div key={c} className="mk-mag__col">
+            {Array.from({ length: 8 }).map((_, i) => (
+              <span key={i} className="mk-mag__line" style={{ background: ink, width: `${68 + ((i + c) * 11) % 32}%` }} />
+            ))}
+          </div>
+        ))}
+      </div>
+    </div>
+  ),
+
+  halen: ([bg, surf, ink, tone]) => (
+    <div className="mk-arch" style={{ color: ink }}>
+      <div className="mk-row mk-arch__bar">
+        <span className="mk-mark mk-arch__brand">HALEN</span>
+        <div className="mk-row mk-mono mk-dim" style={{ gap: "2cqw" }}>
+          <span>Studio</span><span>Projects</span><span>Press</span><span>Contact</span>
+        </div>
+      </div>
+      <div className="mk-arch__stage">
+        <svg viewBox="0 0 200 110" preserveAspectRatio="xMidYMax meet" className="mk-arch__svg">
+          <rect x="0" y="92" width="200" height="18" fill={surf} />
+          <rect x="38" y="44" width="56" height="48" fill={surf} stroke={ink} strokeOpacity="0.15" />
+          <rect x="94" y="28" width="44" height="64" fill={surf} stroke={ink} strokeOpacity="0.2" />
+          <rect x="138" y="58" width="38" height="34" fill={surf} stroke={ink} strokeOpacity="0.15" />
+          <polygon points="38,44 66,30 94,44" fill={tone} fillOpacity="0.55" />
+          <polygon points="94,28 116,14 138,28" fill={tone} fillOpacity="0.4" />
+          {Array.from({ length: 6 }).map((_, i) => (
+            <rect key={"a" + i} x={44 + i * 8} y="56" width="3" height="6" fill={bg} opacity="0.6" />
+          ))}
+          {Array.from({ length: 5 }).map((_, i) => (
+            <rect key={"b" + i} x={100 + i * 7} y="42" width="3" height="6" fill={bg} opacity="0.6" />
+          ))}
+          {Array.from({ length: 5 }).map((_, i) => (
+            <rect key={"c" + i} x={100 + i * 7} y="58" width="3" height="6" fill={bg} opacity="0.6" />
+          ))}
+          {Array.from({ length: 4 }).map((_, i) => (
+            <rect key={"d" + i} x={144 + i * 7} y="68" width="3" height="6" fill={bg} opacity="0.6" />
+          ))}
+        </svg>
+      </div>
+      <div className="mk-row mk-arch__cap mk-mono mk-dim">
+        <span>Casa Ourique — 2024</span>
+        <span>Lisbon · PT</span>
+      </div>
+    </div>
+  ),
+
+  obsidian: ([bg, surf, ink, tone]) => (
+    <div className="mk-ops" style={{ color: ink }}>
+      <aside className="mk-ops__side" style={{ background: surf }}>
+        <span className="mk-mark mk-ops__brand">◆</span>
+        {["Inbox", "Orders", "Routing", "Audit", "Team", "Reports"].map((l, i) => (
+          <div key={l} className="mk-row mk-ops__nav" style={{ opacity: i === 1 ? 1 : 0.5 }}>
+            <span className="mk-ops__dot" style={{ background: i === 1 ? tone : ink, opacity: i === 1 ? 1 : 0.35 }} />
+            <span className="mk-mono">{l}</span>
+          </div>
+        ))}
+      </aside>
+      <div className="mk-ops__main">
+        <div className="mk-row mk-ops__top">
+          <span className="mk-mark mk-ops__title">Orders <span className="mk-dim">/ Today</span></span>
+          <div className="mk-row mk-mono mk-dim" style={{ gap: "1.4cqw" }}>
+            <span>Filter</span><span>Export</span>
+          </div>
+        </div>
+        <div className="mk-ops__table" style={{ borderColor: surf }}>
+          <div className="mk-ops__hdr mk-mono mk-dim">
+            <span>ID</span><span>Customer</span><span>Stage</span><span>Value</span>
+          </div>
+          {[
+            ["OB-2041", "Mercer & Co.", "Packing", tone],
+            ["OB-2042", "Studio Brackish", "Routed", ink],
+            ["OB-2043", "Verre", "Quoted", ink],
+            ["OB-2044", "Linnea Apo.", "Held", tone],
+            ["OB-2045", "Northmark", "Routed", ink],
+          ].map(([id, who, stage, c], i) => (
+            <div key={id} className="mk-ops__row" style={{ borderColor: surf }}>
+              <span className="mk-mono">{id}</span>
+              <span>{who}</span>
+              <span className="mk-ops__pill" style={{ borderColor: c, color: c, opacity: c === tone ? 1 : 0.7 }}>{stage}</span>
+              <span className="mk-mono">${(i + 1) * 1240}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  ),
+
+  linnea: ([bg, surf, ink, tone]) => (
+    <div className="mk-brand" style={{ color: ink, background: `radial-gradient(120% 80% at 50% 0%, ${surf} 0%, ${bg} 70%)` }}>
+      <div className="mk-mono mk-dim mk-brand__eyebrow">— Apothecary · est. 2018</div>
+      <div className="mk-brand__shelf">
+        {[0, 1, 2].map((i) => (
+          <div key={i} className="mk-brand__bottle">
+            <div className="mk-brand__neck" style={{ background: surf, borderColor: ink }} />
+            <div className="mk-brand__body" style={{ background: i === 1 ? tone : surf, borderColor: ink }}>
+              <span className="mk-mono mk-brand__lbl" style={{ color: i === 1 ? bg : ink }}>
+                {["No. 01", "No. 02", "No. 03"][i]}
+              </span>
+              <span className="mk-mark mk-brand__num" style={{ color: i === 1 ? bg : ink }}>L</span>
+            </div>
+          </div>
+        ))}
+      </div>
+      <div className="mk-brand__sig">
+        <h4 className="mk-mark mk-brand__mark">Linnea</h4>
+        <span className="mk-mono mk-dim">Botanical · Cold-pressed · Lisboa</span>
+      </div>
+    </div>
+  ),
+
+  "field-notes": ([bg, surf, ink, tone]) => (
+    <div className="mk-zine" style={{ color: ink }}>
+      <div className="mk-zine__spread" style={{ background: surf }}>
+        <div className="mk-zine__page">
+          <span className="mk-mono mk-dim">Issue 04 · Spring</span>
+          <h4 className="mk-mark mk-zine__h"><em style={{ fontStyle: "italic", color: tone }}>On</em><br />slow looking.</h4>
+          <div className="mk-zine__lines">
+            {Array.from({ length: 7 }).map((_, i) => (
+              <span key={i} className="mk-zine__line" style={{ background: ink, width: `${74 + (i * 7) % 24}%` }} />
+            ))}
+          </div>
+        </div>
+        <div className="mk-zine__fold" style={{ background: bg }} />
+        <div className="mk-zine__page mk-zine__page--r">
+          <div className="mk-zine__photo" style={{ background: bg, borderColor: ink }}>
+            <span className="mk-mark mk-zine__photo-n" style={{ color: tone }}>04</span>
+          </div>
+          <span className="mk-mono mk-dim">Plate I — Riverbed, 06:14</span>
+          <div className="mk-zine__cols">
+            {[0, 1].map((c) => (
+              <div key={c} className="mk-zine__col">
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <span key={i} className="mk-zine__line" style={{ background: ink, width: `${70 + ((i + c) * 9) % 28}%` }} />
+                ))}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+      <div className="mk-row mk-zine__cap mk-mono mk-dim">
+        <span>Field Notes — Quarterly</span>
+        <span>p. 24 / 25</span>
+      </div>
+    </div>
+  ),
+
+  atlas: ([bg, surf, ink, tone]) => (
+    <div className="mk-map" style={{ color: ink }}>
+      <div className="mk-map__view" style={{ background: surf }}>
+        <svg viewBox="0 0 200 140" preserveAspectRatio="xMidYMid slice" className="mk-map__svg">
+          <defs>
+            <pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse">
+              <path d="M 10 0 L 0 0 0 10" fill="none" stroke={ink} strokeOpacity="0.06" strokeWidth="0.4" />
+            </pattern>
+          </defs>
+          <rect width="200" height="140" fill="url(#grid)" />
+          <path d="M0,80 Q40,40 90,70 T200,50" stroke={ink} strokeOpacity="0.15" strokeWidth="0.6" fill="none" />
+          <path d="M0,110 Q60,90 120,100 T200,90" stroke={ink} strokeOpacity="0.15" strokeWidth="0.6" fill="none" />
+          <path d="M20,130 Q70,60 150,100" stroke={tone} strokeWidth="1.2" strokeDasharray="3 2" fill="none" />
+          <path d="M30,30 Q90,80 170,40" stroke={tone} strokeWidth="1.2" strokeDasharray="3 2" fill="none" opacity="0.7" />
+          {[[20, 130], [90, 92], [150, 100], [30, 30], [170, 40], [120, 60]].map(([x, y], i) => (
+            <g key={i}>
+              <circle cx={x} cy={y} r="2.5" fill={tone} />
+              <circle cx={x} cy={y} r="6" fill="none" stroke={tone} strokeOpacity="0.35" />
+            </g>
+          ))}
+          <text x="6" y="12" fill={ink} fontSize="5" opacity="0.4" fontFamily="monospace">38.72°N · 9.13°W</text>
+        </svg>
+      </div>
+      <aside className="mk-map__side">
+        <div className="mk-row mk-map__sidehd">
+          <span className="mk-mark">Atlas</span>
+          <span className="mk-mono mk-dim">Live · 1,284</span>
+        </div>
+        {[["MX-901", "Lisboa → Porto", "On time"], ["MX-902", "Setúbal → Évora", "Loading"], ["MX-903", "Faro → Madrid", "Delay 12m"]].map(([id, leg, st], i) => (
+          <div key={id} className="mk-map__ship" style={{ background: surf, borderColor: bg }}>
+            <div className="mk-row">
+              <span className="mk-mono">{id}</span>
+              <span className="mk-map__pill mk-mono" style={{ background: i === 2 ? tone : "transparent", color: i === 2 ? bg : ink, borderColor: ink }}>
+                {st}
+              </span>
+            </div>
+            <span className="mk-map__leg">{leg}</span>
+            <div className="mk-map__bar" style={{ background: bg }}>
+              <span style={{ background: tone, width: `${30 + i * 25}%` }} />
+            </div>
+          </div>
+        ))}
+      </aside>
+    </div>
+  ),
+
+  "north-mark": ([bg, surf, ink, tone]) => (
+    <div className="mk-firm" style={{ color: ink }}>
+      <div className="mk-row mk-firm__bar">
+        <span className="mk-mark mk-firm__brand">Northmark</span>
+        <div className="mk-row mk-mono mk-dim" style={{ gap: "2.2cqw" }}>
+          <span>Thesis</span><span>Portfolio</span><span>People</span><span>Letters</span>
+        </div>
+        <span className="mk-mono mk-firm__pill" style={{ borderColor: ink }}>Investors · log in</span>
+      </div>
+      <div className="mk-firm__hero">
+        <span className="mk-mono mk-dim">— Vol. IX · Annual letter</span>
+        <h4 className="mk-mark mk-firm__h">
+          We back <em style={{ fontStyle: "italic", color: tone }}>quiet</em> companies<br />for a long time.
+        </h4>
+        <span className="mk-mark mk-firm__sub" style={{ color: ink, opacity: 0.7 }}>
+          A multi-stage partnership for founders building durable infrastructure.
+        </span>
+      </div>
+      <div className="mk-firm__ticker">
+        {["AUM $1.4B", "Founded 2011", "27 portfolio", "9 exits", "Lisbon · NYC"].map((t, i) => (
+          <span key={t} className="mk-mono mk-firm__t" style={{ borderColor: surf, opacity: 0.75 }}>{t}</span>
+        ))}
+      </div>
+    </div>
+  ),
+
+  kindred: ([bg, surf, ink, tone]) => (
+    <div className="mk-poster">
+      {[
+        { label: "01", title: "Kindred", sub: "Vol. I", bg: tone, ink: bg, accent: ink },
+        { label: "02", title: "Kindred", sub: "Vol. II", bg: surf, ink: ink, accent: tone },
+        { label: "03", title: "Kindred", sub: "Vol. III", bg: ink, ink: bg, accent: tone },
+      ].map((p, i) => (
+        <div key={i} className="mk-poster__p" style={{ background: p.bg, color: p.ink }}>
+          <div className="mk-row mk-poster__hd">
+            <span className="mk-mono">{p.label}</span>
+            <span className="mk-mono" style={{ color: p.accent }}>— Kindred fest</span>
+          </div>
+          <div className="mk-poster__big">
+            <span className="mk-mark mk-poster__title">{p.title}</span>
+            <span className="mk-mono mk-poster__sub" style={{ color: p.accent }}>{p.sub}</span>
+          </div>
+          <div className="mk-poster__rule" style={{ background: p.ink, opacity: 0.4 }} />
+          <div className="mk-poster__feet mk-mono">
+            <span>27 → 29 Jun</span>
+            <span>Tapada · Lisboa</span>
+          </div>
+        </div>
+      ))}
+    </div>
+  ),
+};
+
+function Mockup({ project, ratio = "4 / 3" }) {
+  const render = MOCKUPS[project.id];
+  if (!render) return <Placeholder project={project} idx={0} ratio={ratio} />;
+  return (
+    <div className={`mk mk--${project.id}`} style={{ aspectRatio: ratio, background: project.palette[0] }}>
+      {render(project.palette)}
+    </div>
+  );
+}
+
 // ─── Custom cursor ─────────────────────────────────────────────────────────
 function Cursor({ enabled }) {
   const dot = useRef(null);
@@ -370,7 +708,7 @@ function WorkPage({ onOpen, density }) {
             style={{ "--accent-card": p.palette[3] }}
           >
             <div className="card__media">
-              <Placeholder project={p} idx={0} ratio={view === "mosaic" && i % 5 === 0 ? "16 / 9" : "4 / 3"} dense={p.cat === "Dashboards"} />
+              <Mockup project={p} ratio={view === "mosaic" && i % 5 === 0 ? "16 / 9" : "4 / 3"} />
             </div>
             <div className="card__meta">
               <div className="card__title-row">
@@ -427,7 +765,7 @@ function IndexPage({ onOpen }) {
             <span className="mono">{p.year}</span>
             <span className="idx__arrow" aria-hidden="true">↗</span>
             <div className="idx__peek" aria-hidden="true">
-              <Placeholder project={p} idx={0} ratio="4 / 3" />
+              <Mockup project={p} ratio="4 / 3" />
             </div>
           </li>
         ))}
@@ -607,7 +945,7 @@ function CaseStudy({ project, onClose, onNav }) {
         </header>
 
         <div className="cs__hero">
-          <Placeholder project={project} idx={0} ratio="16 / 9" dense={project.cat === "Dashboards"} />
+          <Mockup project={project} ratio="16 / 9" />
         </div>
 
         <section className="cs__row">
